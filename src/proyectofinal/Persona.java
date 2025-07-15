@@ -4,16 +4,18 @@
  */
 package proyectofinal;
 
+import java.io.Serializable;
+
 /**
  *
  * @author nanil
  */
-public class Persona {
+public class Persona implements Serializable {
     String cedula;
     String nombre;
     String apellidos;
     String correo;
-
+    private static final long serialVersionUID = 1L;
     public Persona(String cedula, String nombre, String apellidos, String correo) {
         this.cedula = cedula;
         this.nombre = nombre;
