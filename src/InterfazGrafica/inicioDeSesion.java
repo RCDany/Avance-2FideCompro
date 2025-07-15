@@ -4,6 +4,9 @@
  */
 package InterfazGrafica;
 
+import javax.swing.JOptionPane;
+import proyectofinal.Usuario;
+
 /**
  *
  * @author nanil
@@ -32,10 +35,10 @@ public class inicioDeSesion extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         cedula = new javax.swing.JTextField();
-        Aceptar = new javax.swing.JButton();
+        IniciarSesion = new javax.swing.JButton();
         Cancelar = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        contrasena = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,12 +56,12 @@ public class inicioDeSesion extends javax.swing.JFrame {
             }
         });
 
-        Aceptar.setBackground(new java.awt.Color(51, 153, 255));
-        Aceptar.setForeground(new java.awt.Color(255, 255, 255));
-        Aceptar.setText("Iniciar Sesión");
-        Aceptar.addActionListener(new java.awt.event.ActionListener() {
+        IniciarSesion.setBackground(new java.awt.Color(51, 153, 255));
+        IniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        IniciarSesion.setText("Iniciar Sesión");
+        IniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AceptarActionPerformed(evt);
+                IniciarSesionActionPerformed(evt);
             }
         });
 
@@ -80,7 +83,7 @@ public class inicioDeSesion extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Cancelar)
                 .addGap(18, 18, 18)
-                .addComponent(Aceptar)
+                .addComponent(IniciarSesion)
                 .addGap(19, 19, 19))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(353, 353, 353)
@@ -93,7 +96,7 @@ public class inicioDeSesion extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPasswordField1)
+                            .addComponent(contrasena)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cedula, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                         .addContainerGap(405, Short.MAX_VALUE))))
@@ -110,10 +113,10 @@ public class inicioDeSesion extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(contrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Aceptar)
+                    .addComponent(IniciarSesion)
                     .addComponent(Cancelar))
                 .addGap(19, 19, 19))
         );
@@ -142,9 +145,25 @@ public class inicioDeSesion extends javax.swing.JFrame {
         new MenuDeInicio().setVisible(true);
     }//GEN-LAST:event_CancelarActionPerformed
 
-    private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+    private void IniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IniciarSesionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_AceptarActionPerformed
+        String Cedula = cedula.getText();
+        String contra = new String(contrasena.getPassword());
+        
+        if (Cedula.isEmpty() || contra.isEmpty()){
+          javax.swing.JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacios");
+          return;
+      }
+        Usuario usuarioAutenticado = Usuario.verificarCredenciales(Cedula, contra);
+        if (usuarioAutenticado != null) {
+            JOptionPane.showMessageDialog(this, "Bienvenido " + usuarioAutenticado.getNombre());
+            MenuPrincipal menu = new MenuPrincipal();
+            menu.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+    }
+    }//GEN-LAST:event_IniciarSesionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,13 +191,13 @@ public class inicioDeSesion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Aceptar;
     private javax.swing.JButton Cancelar;
+    private javax.swing.JButton IniciarSesion;
     private javax.swing.JTextField cedula;
+    private javax.swing.JPasswordField contrasena;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
     // End of variables declaration//GEN-END:variables
 }

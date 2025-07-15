@@ -47,7 +47,7 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="Cancelar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="Aceptar" min="-2" max="-2" attributes="0"/>
+                  <Component id="IniciarSesion" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
@@ -63,7 +63,7 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPasswordField1" max="32767" attributes="0"/>
+                              <Component id="contrasena" max="32767" attributes="0"/>
                               <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="cedula" alignment="1" pref="200" max="32767" attributes="0"/>
                           </Group>
@@ -85,10 +85,10 @@
                   <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPasswordField1" min="-2" max="-2" attributes="0"/>
+                  <Component id="contrasena" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="82" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="Aceptar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="IniciarSesion" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="Cancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
@@ -118,7 +118,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cedulaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="Aceptar">
+        <Component class="javax.swing.JButton" name="IniciarSesion">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="99" red="33" type="rgb"/>
@@ -129,7 +129,7 @@
             <Property name="text" type="java.lang.String" value="Iniciar Sesi&#xf3;n"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AceptarActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="IniciarSesionActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="Cancelar">
@@ -148,7 +148,7 @@
             <Property name="text" type="java.lang.String" value="Contrase&#xf1;a"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JPasswordField" name="jPasswordField1">
+        <Component class="javax.swing.JPasswordField" name="contrasena">
         </Component>
       </SubComponents>
     </Container>
