@@ -105,6 +105,11 @@ public class RegistroUsuarios extends javax.swing.JFrame {
         Aceptar.setText("Aceptar");
 
         Cancelar.setText("Cancelar");
+        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Apellidos");
@@ -211,6 +216,12 @@ public class RegistroUsuarios extends javax.swing.JFrame {
     private void contrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contrasenaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_contrasenaActionPerformed
+
+    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new MenuDeInicio().setVisible(true);
+    }//GEN-LAST:event_CancelarActionPerformed
 
     /**
      * @param args the command line arguments

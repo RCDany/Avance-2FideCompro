@@ -56,6 +56,11 @@ public class GenerarFactura extends javax.swing.JFrame {
         Aceptar.setText("Aceptar");
 
         Cancelar.setText("Cancelar");
+        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Esta Venta");
@@ -150,6 +155,12 @@ public class GenerarFactura extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new MenuPrincipal().setVisible(true);
+    }//GEN-LAST:event_CancelarActionPerformed
 
     /**
      * @param args the command line arguments

@@ -80,6 +80,11 @@ public class RegistroClientes extends javax.swing.JFrame {
         Aceptar.setText("Aceptar");
 
         Cancelar.setText("Cancelar");
+        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarActionPerformed(evt);
+            }
+        });
 
         TipoCedula.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fisica", "Juridica", " " }));
 
@@ -173,6 +178,12 @@ public class RegistroClientes extends javax.swing.JFrame {
     private void cedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cedulaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cedulaActionPerformed
+
+    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new MenuPrincipal().setVisible(true);
+    }//GEN-LAST:event_CancelarActionPerformed
 
     /**
      * @param args the command line arguments

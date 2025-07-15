@@ -83,6 +83,11 @@ public class Ventas extends javax.swing.JFrame {
         });
 
         Cancelar1.setText("Salir");
+        Cancelar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Cancelar1ActionPerformed(evt);
+            }
+        });
 
         Aceptar.setBackground(new java.awt.Color(51, 153, 255));
         Aceptar.setForeground(new java.awt.Color(255, 255, 255));
@@ -198,6 +203,12 @@ public class Ventas extends javax.swing.JFrame {
     private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_eliminarActionPerformed
+
+    private void Cancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cancelar1ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new MenuPrincipal().setVisible(true);
+    }//GEN-LAST:event_Cancelar1ActionPerformed
 
     /**
      * @param args the command line arguments

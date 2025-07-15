@@ -47,6 +47,11 @@ public class MenuDeInicio extends javax.swing.JFrame {
         jLabel2.setText("Iniciar Sesion");
 
         Cancelar.setText("Salir");
+        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarActionPerformed(evt);
+            }
+        });
 
         IniciarSesion.setText("Inicio de Sesion");
         IniciarSesion.addActionListener(new java.awt.event.ActionListener() {
@@ -59,6 +64,11 @@ public class MenuDeInicio extends javax.swing.JFrame {
         jLabel3.setText("¿No tienes una cuenta?");
 
         Regustrarse.setText("Registrarse");
+        Regustrarse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RegustrarseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -120,7 +130,21 @@ public class MenuDeInicio extends javax.swing.JFrame {
 
     private void IniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IniciarSesionActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
+        new inicioDeSesion().setVisible(true);
     }//GEN-LAST:event_IniciarSesionActionPerformed
+
+    private void RegustrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegustrarseActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new RegistroUsuarios().setVisible(true);
+        
+    }//GEN-LAST:event_RegustrarseActionPerformed
+
+    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_CancelarActionPerformed
 
     /**
      * @param args the command line arguments

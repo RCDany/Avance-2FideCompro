@@ -49,6 +49,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabel2.setText("Productos");
 
         Cancelar.setText("Salir");
+        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Registrar Productos");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -146,15 +151,27 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
+        new RegistroClientes().setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
+        new RegistroProductos().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
+        new Ventas().setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new MenuDeInicio().setVisible(true);
+    }//GEN-LAST:event_CancelarActionPerformed
 
     /**
      * @param args the command line arguments

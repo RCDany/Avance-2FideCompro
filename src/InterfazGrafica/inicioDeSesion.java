@@ -56,8 +56,18 @@ public class inicioDeSesion extends javax.swing.JFrame {
         Aceptar.setBackground(new java.awt.Color(51, 153, 255));
         Aceptar.setForeground(new java.awt.Color(255, 255, 255));
         Aceptar.setText("Iniciar Sesión");
+        Aceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AceptarActionPerformed(evt);
+            }
+        });
 
         Cancelar.setText("Cancelar");
+        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Contraseña");
@@ -125,6 +135,16 @@ public class inicioDeSesion extends javax.swing.JFrame {
     private void cedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cedulaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cedulaActionPerformed
+
+    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new MenuDeInicio().setVisible(true);
+    }//GEN-LAST:event_CancelarActionPerformed
+
+    private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AceptarActionPerformed
 
     /**
      * @param args the command line arguments
