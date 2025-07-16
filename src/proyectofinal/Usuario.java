@@ -19,10 +19,11 @@ import java.util.ArrayList;
 public class Usuario extends Persona implements Serializable{
     private String contrasena;
     private static final long serialVersionUID = 1L;
-    public Usuario(String contrasena, String cedula, String nombre, String apellidos, String correo) {
+    public Usuario(String cedula, String nombre, String apellidos, String correo, String contrasena) {
         super(cedula, nombre, apellidos, correo);
         this.contrasena = contrasena;
     }
+
     
     public boolean iniciarSesion(String cedula, String contrasena){
         return this.cedula.equals(cedula) && this.contrasena.equals(contrasena);

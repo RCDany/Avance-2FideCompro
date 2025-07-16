@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package InterfazGrafica;
-
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import proyectofinal.Persona;
+import proyectofinal.Usuario;
 /**
  *
  * @author nanil
@@ -33,14 +36,14 @@ public class RegistroUsuarios extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        Nombre = new javax.swing.JTextField();
-        Apellidos = new javax.swing.JTextField();
+        NewNombre = new javax.swing.JTextField();
+        NewApellidos = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        email = new javax.swing.JTextField();
+        Newemail = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        cedula = new javax.swing.JTextField();
+        Newcedula = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        contrasena = new javax.swing.JPasswordField();
+        Newcontrasena = new javax.swing.JPasswordField();
         Aceptar = new javax.swing.JButton();
         Cancelar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -61,48 +64,53 @@ public class RegistroUsuarios extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Nombre");
 
-        Nombre.addActionListener(new java.awt.event.ActionListener() {
+        NewNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NombreActionPerformed(evt);
+                NewNombreActionPerformed(evt);
             }
         });
 
-        Apellidos.addActionListener(new java.awt.event.ActionListener() {
+        NewApellidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ApellidosActionPerformed(evt);
+                NewApellidosActionPerformed(evt);
             }
         });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Email");
 
-        email.addActionListener(new java.awt.event.ActionListener() {
+        Newemail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailActionPerformed(evt);
+                NewemailActionPerformed(evt);
             }
         });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Cedula");
 
-        cedula.addActionListener(new java.awt.event.ActionListener() {
+        Newcedula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cedulaActionPerformed(evt);
+                NewcedulaActionPerformed(evt);
             }
         });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Contraseña");
 
-        contrasena.addActionListener(new java.awt.event.ActionListener() {
+        Newcontrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contrasenaActionPerformed(evt);
+                NewcontrasenaActionPerformed(evt);
             }
         });
 
         Aceptar.setBackground(new java.awt.Color(51, 153, 255));
         Aceptar.setForeground(new java.awt.Color(255, 255, 255));
         Aceptar.setText("Aceptar");
+        Aceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AceptarActionPerformed(evt);
+            }
+        });
 
         Cancelar.setText("Cancelar");
         Cancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -126,23 +134,23 @@ public class RegistroUsuarios extends javax.swing.JFrame {
                         .addGap(63, 63, 63))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(email, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Newemail, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(NewNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
-                                    .addComponent(Apellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(NewApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4)
-                            .addComponent(cedula, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(Newcedula, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(jLabel3)
-                            .addComponent(contrasena))
+                            .addComponent(Newcontrasena))
                         .addGap(0, 0, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -162,20 +170,20 @@ public class RegistroUsuarios extends javax.swing.JFrame {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Apellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(NewNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(NewApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Newemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Newcedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(contrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Newcontrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Aceptar)
@@ -197,31 +205,70 @@ public class RegistroUsuarios extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cedulaActionPerformed
+    private void NewcedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewcedulaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cedulaActionPerformed
+    }//GEN-LAST:event_NewcedulaActionPerformed
 
-    private void emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailActionPerformed
+    private void NewemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewemailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_emailActionPerformed
+    }//GEN-LAST:event_NewemailActionPerformed
 
-    private void NombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NombreActionPerformed
+    private void NewNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewNombreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_NombreActionPerformed
+    }//GEN-LAST:event_NewNombreActionPerformed
 
-    private void ApellidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApellidosActionPerformed
+    private void NewApellidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewApellidosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ApellidosActionPerformed
+    }//GEN-LAST:event_NewApellidosActionPerformed
 
-    private void contrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contrasenaActionPerformed
+    private void NewcontrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewcontrasenaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_contrasenaActionPerformed
+    }//GEN-LAST:event_NewcontrasenaActionPerformed
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
         new MenuDeInicio().setVisible(true);
     }//GEN-LAST:event_CancelarActionPerformed
+
+    private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+        // TODO add your handling code here:
+        String nombre = NewNombre.getText();
+        String apellidos = NewApellidos.getText();
+        String contrasena = new String(Newcontrasena.getPassword());
+        String cedula = Newcedula.getText();
+        String email = Newemail.getText();
+        
+        if (email.isEmpty() || nombre.isEmpty() || contrasena.isEmpty() || cedula.isEmpty() || apellidos.isEmpty()){
+            javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
+            return;
+        }
+        Usuario nuevo = new Usuario(cedula, nombre, apellidos , email, contrasena);
+        
+        if (!nuevo.validarCorreo()){
+            JOptionPane.showMessageDialog(this, "Correo inválido");
+            return;
+        }
+        if (!nuevo.validarCedula()){
+            JOptionPane.showMessageDialog(this, "Cedula inválida");
+            return;
+        }
+        
+        ArrayList<Usuario> listaUsuarios = Usuario.LeerUsuarios();
+
+        for (Usuario u :listaUsuarios) {
+            if (u.getCedula().equals(cedula)){
+                javax.swing.JOptionPane.showMessageDialog(this, "El numero de cedula " + cedula + " ya esta en uso.");
+                return;
+            }
+        }
+        listaUsuarios.add(nuevo);
+        Usuario.EscribirUsuario(listaUsuarios);
+        javax.swing.JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
+        
+        this.setVisible(false);
+        new MenuDeInicio().setVisible(true);
+    }//GEN-LAST:event_AceptarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,12 +297,12 @@ public class RegistroUsuarios extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Aceptar;
-    private javax.swing.JTextField Apellidos;
     private javax.swing.JButton Cancelar;
-    private javax.swing.JTextField Nombre;
-    private javax.swing.JTextField cedula;
-    private javax.swing.JPasswordField contrasena;
-    private javax.swing.JTextField email;
+    private javax.swing.JTextField NewApellidos;
+    private javax.swing.JTextField NewNombre;
+    private javax.swing.JTextField Newcedula;
+    private javax.swing.JPasswordField Newcontrasena;
+    private javax.swing.JTextField Newemail;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
