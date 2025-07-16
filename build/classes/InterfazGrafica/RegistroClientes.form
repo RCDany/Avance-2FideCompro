@@ -65,22 +65,22 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="email" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="newemail" alignment="0" max="32767" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="Nombre" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                          <Component id="newNombre" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                                          <Component id="Apellidos" min="-2" pref="200" max="-2" attributes="0"/>
+                                          <Component id="newApellidos" min="-2" pref="200" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
                               <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cedula" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <Component id="newcedula" min="-2" pref="200" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="TipoCedula" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -94,7 +94,7 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="Cancelar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="Aceptar" min="-2" max="-2" attributes="0"/>
+                  <Component id="Registrar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -111,23 +111,23 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="Nombre" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="Apellidos" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newNombre" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newApellidos" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="email" min="-2" max="-2" attributes="0"/>
+                  <Component id="newemail" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="cedula" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newcedula" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="TipoCedula" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="79" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="Aceptar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="Registrar" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="Cancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
@@ -152,9 +152,9 @@
             <Property name="text" type="java.lang.String" value="Nombre"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="Nombre">
+        <Component class="javax.swing.JTextField" name="newNombre">
         </Component>
-        <Component class="javax.swing.JTextField" name="Apellidos">
+        <Component class="javax.swing.JTextField" name="newApellidos">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -164,9 +164,9 @@
             <Property name="text" type="java.lang.String" value="Email"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="email">
+        <Component class="javax.swing.JTextField" name="newemail">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="emailActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newemailActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
@@ -177,12 +177,12 @@
             <Property name="text" type="java.lang.String" value="Cedula"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="cedula">
+        <Component class="javax.swing.JTextField" name="newcedula">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cedulaActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newcedulaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="Aceptar">
+        <Component class="javax.swing.JButton" name="Registrar">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="99" red="33" type="rgb"/>
@@ -190,8 +190,11 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Aceptar"/>
+            <Property name="text" type="java.lang.String" value="Registrar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RegistrarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="Cancelar">
           <Properties>
@@ -204,13 +207,15 @@
         <Component class="javax.swing.JComboBox" name="TipoCedula">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
+              <StringArray count="2">
                 <StringItem index="0" value="Fisica"/>
                 <StringItem index="1" value="Juridica"/>
-                <StringItem index="2" value=" "/>
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TipoCedulaActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>

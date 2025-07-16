@@ -4,6 +4,10 @@
  */
 package InterfazGrafica;
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import proyectofinal.Cliente;
+
 /**
  *
  * @author nanil
@@ -33,13 +37,13 @@ public class RegistroClientes extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        Nombre = new javax.swing.JTextField();
-        Apellidos = new javax.swing.JTextField();
+        newNombre = new javax.swing.JTextField();
+        newApellidos = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        email = new javax.swing.JTextField();
+        newemail = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        cedula = new javax.swing.JTextField();
-        Aceptar = new javax.swing.JButton();
+        newcedula = new javax.swing.JTextField();
+        Registrar = new javax.swing.JButton();
         Cancelar = new javax.swing.JButton();
         TipoCedula = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
@@ -60,24 +64,29 @@ public class RegistroClientes extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Email");
 
-        email.addActionListener(new java.awt.event.ActionListener() {
+        newemail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailActionPerformed(evt);
+                newemailActionPerformed(evt);
             }
         });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Cedula");
 
-        cedula.addActionListener(new java.awt.event.ActionListener() {
+        newcedula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cedulaActionPerformed(evt);
+                newcedulaActionPerformed(evt);
             }
         });
 
-        Aceptar.setBackground(new java.awt.Color(51, 153, 255));
-        Aceptar.setForeground(new java.awt.Color(255, 255, 255));
-        Aceptar.setText("Aceptar");
+        Registrar.setBackground(new java.awt.Color(51, 153, 255));
+        Registrar.setForeground(new java.awt.Color(255, 255, 255));
+        Registrar.setText("Registrar");
+        Registrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RegistrarActionPerformed(evt);
+            }
+        });
 
         Cancelar.setText("Cancelar");
         Cancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -86,7 +95,12 @@ public class RegistroClientes extends javax.swing.JFrame {
             }
         });
 
-        TipoCedula.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fisica", "Juridica", " " }));
+        TipoCedula.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fisica", "Juridica" }));
+        TipoCedula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TipoCedulaActionPerformed(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setText("Apellidos");
@@ -104,18 +118,18 @@ public class RegistroClientes extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(email, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(newemail, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(newNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel2))
                                     .addGap(18, 18, 18)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel11)
-                                        .addComponent(Apellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(newApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(jLabel4)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(newcedula, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(TipoCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel3))
@@ -124,7 +138,7 @@ public class RegistroClientes extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Cancelar)
                 .addGap(18, 18, 18)
-                .addComponent(Aceptar)
+                .addComponent(Registrar)
                 .addGap(19, 19, 19))
         );
         jPanel1Layout.setVerticalGroup(
@@ -138,21 +152,21 @@ public class RegistroClientes extends javax.swing.JFrame {
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Apellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(newNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(newApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(newemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(newcedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TipoCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Aceptar)
+                    .addComponent(Registrar)
                     .addComponent(Cancelar))
                 .addGap(19, 19, 19))
         );
@@ -171,19 +185,61 @@ public class RegistroClientes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailActionPerformed
+    private void newemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newemailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_emailActionPerformed
+    }//GEN-LAST:event_newemailActionPerformed
 
-    private void cedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cedulaActionPerformed
+    private void newcedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newcedulaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cedulaActionPerformed
+    }//GEN-LAST:event_newcedulaActionPerformed
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
         new MenuPrincipal().setVisible(true);
     }//GEN-LAST:event_CancelarActionPerformed
+
+    private void RegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarActionPerformed
+        // TODO add your handling code here:
+        String nombre = newNombre.getText();
+        String apellidos = newApellidos.getText();
+        String cedula = newcedula.getText();
+        String email = newemail.getText();
+        String tipoCedula = TipoCedula.getSelectedItem().toString();
+        
+        if (email.isEmpty() || nombre.isEmpty() || cedula.isEmpty() || apellidos.isEmpty()){
+            javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
+            return;
+        }
+        Cliente nuevo = new Cliente(tipoCedula, cedula, nombre, apellidos, email);
+
+        if (!nuevo.validarCorreo()){
+            JOptionPane.showMessageDialog(this, "Correo inválido");
+            return;
+        }
+        if (!nuevo.validarCedula()){
+            JOptionPane.showMessageDialog(this, "Cedula inválida");
+            return;
+        }
+        ArrayList<Cliente> listaClientes = Cliente.LeerClientes();
+        
+        for (Cliente u :listaClientes) {
+            if (u.getCedula().equals(cedula) || (u.getTipoCedula().equals(tipoCedula))){
+                javax.swing.JOptionPane.showMessageDialog(this, "El numero de cedula " + tipoCedula + " " + cedula + " ya esta en uso.");
+                return;
+            }
+        }
+        listaClientes.add(nuevo);
+        Cliente.EscribirCliente(listaClientes);
+        javax.swing.JOptionPane.showMessageDialog(this, "Cliente Registrado Correctamente");
+        
+        this.setVisible(false);
+        new MenuPrincipal().setVisible(true);
+    }//GEN-LAST:event_RegistrarActionPerformed
+
+    private void TipoCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoCedulaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TipoCedulaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -211,14 +267,10 @@ public class RegistroClientes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Aceptar;
-    private javax.swing.JTextField Apellidos;
     private javax.swing.JButton Cancelar;
-    private javax.swing.JTextField Nombre;
+    private javax.swing.JButton Registrar;
     private javax.swing.JComboBox<String> TipoCedula;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JTextField cedula;
-    private javax.swing.JTextField email;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -226,5 +278,9 @@ public class RegistroClientes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField newApellidos;
+    private javax.swing.JTextField newNombre;
+    private javax.swing.JTextField newcedula;
+    private javax.swing.JTextField newemail;
     // End of variables declaration//GEN-END:variables
 }

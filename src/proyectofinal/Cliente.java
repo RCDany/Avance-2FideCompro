@@ -16,10 +16,22 @@ import java.util.ArrayList;
  * @author nanil
  */
 public class Cliente extends Persona {
+    private String tipoCedula;
 
-    public Cliente(String cedula, String nombre, String apellidos, String correo) {
+    public Cliente(String tipoCedula, String cedula, String nombre, String apellidos, String correo) {
         super(cedula, nombre, apellidos, correo);
+        this.tipoCedula = tipoCedula;
     }
+
+    public String getTipoCedula() {
+        return tipoCedula;
+    }
+
+    public void setTipoCedula(String tipoCedula) {
+        this.tipoCedula = tipoCedula;
+    }
+
+    
 
     public String getCedula() {
         return cedula;

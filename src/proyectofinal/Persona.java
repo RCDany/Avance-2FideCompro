@@ -27,7 +27,7 @@ public class Persona implements Serializable {
         return correo.contains("@") && correo.contains(".");
     }
     public boolean validarCedula(){
-        return cedula.matches("\\d{9}");
+        return cedula.matches("\\d{10}");
     }
     
 }
