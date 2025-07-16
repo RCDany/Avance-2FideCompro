@@ -4,6 +4,9 @@
  */
 package InterfazGrafica;
 
+import java.util.ArrayList;
+import proyectofinal.Producto;
+
 /**
  *
  * @author nanil
@@ -64,6 +67,11 @@ public class RegistroProductos extends javax.swing.JFrame {
         Aceptar.setBackground(new java.awt.Color(51, 153, 255));
         Aceptar.setForeground(new java.awt.Color(255, 255, 255));
         Aceptar.setText("Aceptar");
+        Aceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AceptarActionPerformed(evt);
+            }
+        });
 
         Cancelar.setText("Cancelar");
         Cancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -205,6 +213,53 @@ public class RegistroProductos extends javax.swing.JFrame {
         this.setVisible(false);
         new MenuPrincipal().setVisible(true);
     }//GEN-LAST:event_CancelarActionPerformed
+
+    private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+        // TODO add your handling code here:
+        String nombre = NombreProducto.getText().trim();
+        String descripcion = descripcionProducto.getText().trim();
+        String codigo = codigoProducto.getText().trim();
+        String cantidadTexto = cantidadProducto.getText().trim();
+        if (nombre.isEmpty() || codigo.isEmpty() || cantidadTexto.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Nombre, código y cantidad son obligatorios.");
+            return;
+        }
+
+        
+        if (!codigo.matches("PRD-\\d{3}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El código debe tener el formato PRD-XXX, donde XXX son números.");
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(cantidadTexto);
+            if (cantidad < 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La cantidad debe ser un número entero positivo.");
+            return;
+        }
+
+        double precio = 0.0; 
+
+        ArrayList<Producto> listaProductos = Producto.LeerProductos();
+
+        for (Producto p : listaProductos) {
+            if (p.getCodigo().equalsIgnoreCase(codigo)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El código de producto ya está en uso.");
+                return;
+            }
+        }
+
+        Producto nuevo = new Producto(codigo, nombre, descripcion, precio, cantidad);
+        listaProductos.add(nuevo);
+        Producto.EscribirProducto(listaProductos);
+
+        javax.swing.JOptionPane.showMessageDialog(this, "Producto registrado correctamente.");
+
+        this.setVisible(false);
+        new MenuPrincipal().setVisible(true);
+    }//GEN-LAST:event_AceptarActionPerformed
 
     /**
      * @param args the command line arguments
