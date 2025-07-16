@@ -12,6 +12,9 @@ public class Main {
 
     public static void main(String[] args) {
         // TODO code application logic here
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new InterfazGrafica.MenuDeInicio().setVisible(true);
+        });
         
     }
     
