@@ -47,6 +47,8 @@ public class RegistroProductos extends javax.swing.JFrame {
         codigoProducto = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        Precio = new javax.swing.JTextField();
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Detalles");
@@ -107,6 +109,9 @@ public class RegistroProductos extends javax.swing.JFrame {
 
         jLabel9.setText("(Opcional)");
 
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setText("Precio");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -150,7 +155,11 @@ public class RegistroProductos extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(cantidadProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(Precio, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(295, 295, 295))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,9 +185,15 @@ public class RegistroProductos extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(codigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cantidadProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cantidadProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Precio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Aceptar)
@@ -220,8 +235,9 @@ public class RegistroProductos extends javax.swing.JFrame {
         String descripcion = descripcionProducto.getText().trim();
         String codigo = codigoProducto.getText().trim();
         String cantidadTexto = cantidadProducto.getText().trim();
-        if (nombre.isEmpty() || codigo.isEmpty() || cantidadTexto.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Nombre, código y cantidad son obligatorios.");
+        String precioTexto = Precio.getText().trim();
+        if (nombre.isEmpty() || codigo.isEmpty() || cantidadTexto.isEmpty() || precioTexto.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Nombre, código, cantidad y precio son obligatorios.");
             return;
         }
 
@@ -241,7 +257,13 @@ public class RegistroProductos extends javax.swing.JFrame {
         }
 
         double precio = 0.0; 
-
+         try {
+            precio = Double.parseDouble(precioTexto);
+            if (precio < 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El precio debe ser un número válido y positivo.");
+            return;
+        }
         ArrayList<Producto> listaProductos = Producto.LeerProductos();
 
         for (Producto p : listaProductos) {
@@ -290,10 +312,12 @@ public class RegistroProductos extends javax.swing.JFrame {
     private javax.swing.JButton Aceptar;
     private javax.swing.JButton Cancelar;
     private javax.swing.JTextField NombreProducto;
+    private javax.swing.JTextField Precio;
     private javax.swing.JFormattedTextField cantidadProducto;
     private javax.swing.JTextField codigoProducto;
     private javax.swing.JTextArea descripcionProducto;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

@@ -11,6 +11,9 @@ package InterfazGrafica;
 public class Ventas extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Ventas.class.getName());
+    private java.util.List<proyectofinal.Producto> productosVenta = new java.util.ArrayList<>();
+    private double subtotal = 0.0;
+
 
     /**
      * Creates new form Ventas
@@ -35,7 +38,7 @@ public class Ventas extends javax.swing.JFrame {
         agregar = new javax.swing.JButton();
         CodigoProducto = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        AreaVenta = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
         eliminar = new javax.swing.JButton();
         Cancelar1 = new javax.swing.JButton();
@@ -43,6 +46,9 @@ public class Ventas extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        Subtotal = new javax.swing.JLabel();
+        IVA = new javax.swing.JLabel();
+        total = new javax.swing.JLabel();
 
         jButton5.setText("Agregar a la Venta");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -68,9 +74,9 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        AreaVenta.setColumns(20);
+        AreaVenta.setRows(5);
+        jScrollPane1.setViewportView(AreaVenta);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Esta Venta");
@@ -92,6 +98,11 @@ public class Ventas extends javax.swing.JFrame {
         Aceptar.setBackground(new java.awt.Color(51, 153, 255));
         Aceptar.setForeground(new java.awt.Color(255, 255, 255));
         Aceptar.setText("Generar Factura");
+        Aceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AceptarActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Subtotal");
@@ -101,6 +112,15 @@ public class Ventas extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Total");
+
+        Subtotal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Subtotal.setText("0");
+
+        IVA.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        IVA.setText("0");
+
+        total.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        total.setText("0");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -140,6 +160,11 @@ public class Ventas extends javax.swing.JFrame {
                             .addComponent(jLabel9)
                             .addComponent(jLabel8)
                             .addComponent(jLabel7))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Subtotal)
+                            .addComponent(IVA)
+                            .addComponent(total))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -166,12 +191,20 @@ public class Ventas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Subtotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(IVA)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(total)))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -194,6 +227,46 @@ public class Ventas extends javax.swing.JFrame {
 
     private void agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarActionPerformed
         // TODO add your handling code here:
+        String codigo = CodigoProducto.getText().trim();
+        if (codigo.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, ingrese un código de producto.");
+            return;
+        }
+
+        java.util.List<proyectofinal.Producto> todosLosProductos = proyectofinal.Producto.LeerProductos();
+        proyectofinal.Producto productoEncontrado = null;
+
+        for (proyectofinal.Producto p : todosLosProductos) {
+            if (p.getCodigo().equalsIgnoreCase(codigo)) {
+                productoEncontrado = p;
+                break;
+            }
+        }
+
+        if (productoEncontrado == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Producto no encontrado.");
+            return;
+        }
+
+        
+        productosVenta.add(productoEncontrado);
+        subtotal += productoEncontrado.getPrecio();
+
+        
+        AreaVenta.append(productoEncontrado.getNombre() + " - " + String.format("₡%.2f", productoEncontrado.getPrecio()) + "\n");
+
+        
+        double iva = subtotal * 0.13;
+        double totalFinal = subtotal + iva;
+
+        
+        Subtotal.setText(String.format("₡%.2f", subtotal));
+        IVA.setText(String.format("₡%.2f", iva));
+        total.setText(String.format("₡%.2f", totalFinal));
+
+        
+        CodigoProducto.setText("");
+
     }//GEN-LAST:event_agregarActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -202,6 +275,27 @@ public class Ventas extends javax.swing.JFrame {
 
     private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
         // TODO add your handling code here:
+        if (productosVenta.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay productos en la venta.");
+            return;
+        }
+
+        proyectofinal.Producto eliminado = productosVenta.remove(productosVenta.size() - 1);
+        subtotal -= eliminado.getPrecio();
+
+        
+        AreaVenta.setText("");
+        for (proyectofinal.Producto p : productosVenta) {
+            AreaVenta.append(p.getNombre() + " - " + String.format("₡%.2f", p.getPrecio()) + "\n");
+        }
+
+        double iva = subtotal * 0.13;
+        double totalFinal = subtotal + iva;
+
+        Subtotal.setText(String.format("₡%.2f", subtotal));
+        IVA.setText(String.format("₡%.2f", iva));
+        total.setText(String.format("₡%.2f", totalFinal));
+
     }//GEN-LAST:event_eliminarActionPerformed
 
     private void Cancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cancelar1ActionPerformed
@@ -209,6 +303,10 @@ public class Ventas extends javax.swing.JFrame {
         this.setVisible(false);
         new MenuPrincipal().setVisible(true);
     }//GEN-LAST:event_Cancelar1ActionPerformed
+
+    private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AceptarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -237,8 +335,11 @@ public class Ventas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Aceptar;
+    private javax.swing.JTextArea AreaVenta;
     private javax.swing.JButton Cancelar1;
     private javax.swing.JTextField CodigoProducto;
+    private javax.swing.JLabel IVA;
+    private javax.swing.JLabel Subtotal;
     private javax.swing.JButton agregar;
     private javax.swing.JButton eliminar;
     private javax.swing.JButton jButton5;
@@ -250,6 +351,6 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel total;
     // End of variables declaration//GEN-END:variables
 }
