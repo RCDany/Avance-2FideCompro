@@ -4,6 +4,8 @@
  */
 package InterfazGrafica;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author nanil
@@ -42,13 +44,15 @@ public class Ventas extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         eliminar = new javax.swing.JButton();
         Cancelar1 = new javax.swing.JButton();
-        Aceptar = new javax.swing.JButton();
+        generarFactura = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         Subtotal = new javax.swing.JLabel();
         IVA = new javax.swing.JLabel();
         total = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        cedula = new javax.swing.JTextField();
 
         jButton5.setText("Agregar a la Venta");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -95,12 +99,12 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
 
-        Aceptar.setBackground(new java.awt.Color(51, 153, 255));
-        Aceptar.setForeground(new java.awt.Color(255, 255, 255));
-        Aceptar.setText("Generar Factura");
-        Aceptar.addActionListener(new java.awt.event.ActionListener() {
+        generarFactura.setBackground(new java.awt.Color(51, 153, 255));
+        generarFactura.setForeground(new java.awt.Color(255, 255, 255));
+        generarFactura.setText("Generar Factura");
+        generarFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AceptarActionPerformed(evt);
+                generarFacturaActionPerformed(evt);
             }
         });
 
@@ -121,6 +125,9 @@ public class Ventas extends javax.swing.JFrame {
 
         total.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         total.setText("0");
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setText("Cedula");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -147,13 +154,15 @@ public class Ventas extends javax.swing.JFrame {
                                                 .addComponent(agregar)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(eliminar))
-                                            .addComponent(CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel10)
+                                            .addComponent(cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(Cancelar1)
                                 .addGap(18, 18, 18)
-                                .addComponent(Aceptar)
+                                .addComponent(generarFactura)
                                 .addGap(17, 17, 17))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,10 +189,14 @@ public class Ventas extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(agregar)
                     .addComponent(eliminar))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addGap(18, 18, 18)
+                .addComponent(cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Cancelar1)
-                    .addComponent(Aceptar))
+                    .addComponent(generarFactura))
                 .addGap(22, 22, 22))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(66, 66, 66)
@@ -304,9 +317,78 @@ public class Ventas extends javax.swing.JFrame {
         new MenuPrincipal().setVisible(true);
     }//GEN-LAST:event_Cancelar1ActionPerformed
 
-    private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+    private void generarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarFacturaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_AceptarActionPerformed
+        if (productosVenta.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay productos en la venta.");
+            return;
+        }
+
+        String cedulaTexto = cedula.getText().trim();
+        if (cedulaTexto.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Debe ingresar la cédula del cliente.");
+            return;
+        }
+
+        ArrayList<proyectofinal.Cliente> clientes = proyectofinal.Cliente.LeerClientes();
+        proyectofinal.Cliente clienteEncontrado = null;
+        for (proyectofinal.Cliente c : clientes) {
+            if (c.getCedula().equalsIgnoreCase(cedulaTexto)) {
+                clienteEncontrado = c;
+                break;
+            }
+        }
+
+        if (clienteEncontrado == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cliente no registrado. Regístrelo primero.");
+            return;
+        }
+
+        
+        StringBuilder factura = new StringBuilder();
+        factura.append("----- FideCompro -----\n");
+        factura.append("Factura generada el ").append(java.time.LocalDateTime.now()).append("\n\n");
+        factura.append("Cliente: ").append(clienteEncontrado.getNombre()).append(" ").append(clienteEncontrado.getApellidos()).append("\n");
+        factura.append("Cédula: ").append(clienteEncontrado.getCedula()).append("\n\n");
+        factura.append("Productos:\n");
+
+        for (proyectofinal.Producto p : productosVenta) {
+            factura.append(" - ").append(p.getNombre()).append(": ₡").append(String.format("%.2f", p.getPrecio())).append("\n");
+        }
+
+        factura.append("\nSubtotal: ").append(Subtotal.getText());
+        factura.append("\nIVA (13%): ").append(IVA.getText());
+        factura.append("\nTotal: ").append(total.getText());
+        factura.append("\n---------------------------\n");
+
+        //Guardar en txt
+        try {
+            String nombreArchivo = "Factura_" + java.time.LocalDateTime.now()
+                    .toString().replace(":", "-").replace(".", "-") + ".txt";
+            java.io.FileWriter writer = new java.io.FileWriter(nombreArchivo);
+            writer.write(factura.toString());
+            writer.close();
+            javax.swing.JOptionPane.showMessageDialog(this, "Factura generada y guardada como:\n" + nombreArchivo);
+        } catch (java.io.IOException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar la factura: " + e.getMessage());
+            return;
+        }
+
+        
+        productosVenta.clear();
+        subtotal = 0.0;
+        Subtotal.setText("₡0.00");
+        IVA.setText("₡0.00");
+        total.setText("₡0.00");
+        AreaVenta.setText("");
+        CodigoProducto.setText("");
+        cedula.setText("");
+
+        
+        
+        
+        
+    }//GEN-LAST:event_generarFacturaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -334,16 +416,18 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Aceptar;
     private javax.swing.JTextArea AreaVenta;
     private javax.swing.JButton Cancelar1;
     private javax.swing.JTextField CodigoProducto;
     private javax.swing.JLabel IVA;
     private javax.swing.JLabel Subtotal;
     private javax.swing.JButton agregar;
+    private javax.swing.JTextField cedula;
     private javax.swing.JButton eliminar;
+    private javax.swing.JButton generarFactura;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
