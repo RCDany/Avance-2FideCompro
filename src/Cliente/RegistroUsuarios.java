@@ -4,10 +4,6 @@
  */
 package Cliente;
 import Cliente.MenuDeInicio;
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import Servidor.Persona;
-import Servidor.Usuario;
 /**
  *
  * @author nanil
@@ -296,7 +292,6 @@ public class RegistroUsuarios extends javax.swing.JFrame {
                 }
             }
         }.execute();
-    }
     }//GEN-LAST:event_AceptarActionPerformed
 
     /**

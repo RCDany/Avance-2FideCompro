@@ -159,7 +159,7 @@ public class inicioDeSesion extends javax.swing.JFrame {
             return;
         }
 
-        // Referencias para usar dentro del SwingWorker
+       
         final java.awt.Window window = (java.awt.Window) this;
 
         IniciarSesion.setEnabled(false);
