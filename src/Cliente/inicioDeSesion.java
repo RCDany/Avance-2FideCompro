@@ -147,22 +147,58 @@ public class inicioDeSesion extends javax.swing.JFrame {
 
     private void IniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IniciarSesionActionPerformed
         // TODO add your handling code here:
-        String Cedula = cedula.getText();
-        String contra = new String(contrasena.getPassword());
-        
-        if (Cedula.isEmpty() || contra.isEmpty()){
-          javax.swing.JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacios");
-          return;
-      }
-        Usuario usuarioAutenticado = Usuario.verificarCredenciales(Cedula, contra);
-        if (usuarioAutenticado != null) {
-            JOptionPane.showMessageDialog(this, "Bienvenido " + usuarioAutenticado.getNombre());
-            MenuPrincipal menu = new MenuPrincipal();
-            menu.setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
-    }
+        String ced = cedula.getText().trim();
+        String pass = new String(contrasena.getPassword());
+
+        if (ced.isEmpty() || pass.isEmpty()){
+            javax.swing.JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos");
+            return;
+        }
+        if (!ced.matches("\\d{9,10}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cédula inválida");
+            return;
+        }
+
+        // Referencias para usar dentro del SwingWorker
+        final java.awt.Window window = (java.awt.Window) this;
+
+        IniciarSesion.setEnabled(false);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        new javax.swing.SwingWorker<Boolean, Void>() {
+            String error = null;
+
+            @Override protected Boolean doInBackground() {
+                try {
+                    Cliente.net.ClientApi api = new Cliente.net.ClientApi();
+                    Cliente.net.ClientApi.Resultado r = api.login(ced, pass);
+                    if (!r.ok) { 
+                        error = "Usuario o contraseña incorrectos";
+                        return false; 
+                    }
+                    return true;
+                } catch (Exception ex) {
+                    error = "No se pudo contactar al servidor: " + ex.getMessage();
+                    return false;
+                }
+            }
+
+            @Override protected void done() {
+                IniciarSesion.setEnabled(true);
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                try {
+                    if (get()) {
+                        javax.swing.JOptionPane.showMessageDialog(window, "Bienvenido");
+                        new MenuPrincipal().setVisible(true);
+                        window.dispose();
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(window, error);
+                    }
+                } catch (Exception e) {
+                    javax.swing.JOptionPane.showMessageDialog(window, "Error inesperado.");
+                }
+            }
+        }.execute();
     }//GEN-LAST:event_IniciarSesionActionPerformed
 
     /**

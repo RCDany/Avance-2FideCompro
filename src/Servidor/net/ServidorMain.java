@@ -66,6 +66,12 @@ public class ServidorMain {
                     service.registrar(u);
                     return "OK|REGISTRADO";
                 }
+                if (line.startsWith("LOGIN|")) {
+                    String[] p = line.split("\\|", 3);
+                    if (p.length < 3) return "ERROR|FORMATO";
+                    boolean ok = service.login(p[1], p[2]);
+                    return ok ? "OK|LOGIN" : "ERROR|INVALIDO";
+                }
                 return "ERROR|COMANDO";
             } catch (IllegalArgumentException iae) {
                 return "ERROR|VALIDACION|" + iae.getMessage();

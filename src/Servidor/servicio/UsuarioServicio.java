@@ -27,4 +27,11 @@ public class UsuarioServicio {
 
         dao.registrar(u); 
     }
+    public boolean login(String cedula, String password) throws Exception {
+        if (cedula == null || !cedula.matches("\\d{9,10}"))
+            throw new IllegalArgumentException("Cédula inválida");
+        if (password == null || password.isBlank())
+            throw new IllegalArgumentException("Contraseña vacía");
+        return dao.verificarCredenciales(cedula, password);
+    }
 }

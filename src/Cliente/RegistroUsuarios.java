@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Cliente;
+import Cliente.MenuDeInicio;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import Servidor.Persona;
@@ -233,41 +234,69 @@ public class RegistroUsuarios extends javax.swing.JFrame {
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
         // TODO add your handling code here:
-        String nombre = NewNombre.getText();
-        String apellidos = NewApellidos.getText();
+        String nombre = NewNombre.getText().trim();
+        String apellidos = NewApellidos.getText().trim();
         String contrasena = new String(Newcontrasena.getPassword());
-        String cedula = Newcedula.getText();
-        String email = Newemail.getText();
-        
+        String cedula = Newcedula.getText().trim();
+        String email = Newemail.getText().trim();
+
+        //validación local adicional de la del servidor
         if (email.isEmpty() || nombre.isEmpty() || contrasena.isEmpty() || cedula.isEmpty() || apellidos.isEmpty()){
             javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
             return;
         }
-        Usuario nuevo = new Usuario(cedula, nombre, apellidos , email, contrasena);
-        
-        if (!nuevo.validarCorreo()){
-            JOptionPane.showMessageDialog(this, "Correo inválido");
+        if (!email.contains("@") || !email.contains(".")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Correo inválido");
             return;
         }
-        if (!nuevo.validarCedula()){
-            JOptionPane.showMessageDialog(this, "Cedula inválida");
+        if (!cedula.matches("\\d{9,10}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cédula inválida");
             return;
         }
-        
-        ArrayList<Usuario> listaUsuarios = Usuario.LeerUsuarios();
 
-        for (Usuario u :listaUsuarios) {
-            if (u.getCedula().equals(cedula)){
-                javax.swing.JOptionPane.showMessageDialog(this, "El numero de cedula " + cedula + " ya esta en uso.");
-                return;
+        Aceptar.setEnabled(false);
+        Cancelar.setEnabled(false);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        new javax.swing.SwingWorker<Boolean, Void>() {
+            String error = null;
+
+            @Override protected Boolean doInBackground() {
+                try {
+                    Cliente.net.ClientApi api = new Cliente.net.ClientApi();
+                    if (api.checkCedula(cedula)) {
+                        error = "El número de cédula " + cedula + " ya está en uso.";
+                        return false;
+                    }
+                    Cliente.net.ClientApi.Resultado r =
+                            api.registrarUsuario(cedula, nombre, apellidos, email, contrasena);
+                    if (!r.ok) { error = "Error de servidor: " + r.mensaje; return false; }
+                    return true;
+                } catch (Exception ex) {
+                    error = "No se pudo contactar al servidor: " + ex.getMessage();
+                    return false;
+                }
             }
-        }
-        listaUsuarios.add(nuevo);
-        Usuario.EscribirUsuario(listaUsuarios);
-        javax.swing.JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
-        
-        this.setVisible(false);
-        new MenuDeInicio().setVisible(true);
+
+            @Override protected void done() {
+                Aceptar.setEnabled(true);
+                Cancelar.setEnabled(true);
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                try {
+                    boolean ok = get();
+                    if (ok) {
+                        javax.swing.JOptionPane.showMessageDialog(RegistroUsuarios.this, "Usuario registrado correctamente");
+                        RegistroUsuarios.this.setVisible(false);
+                        new MenuDeInicio().setVisible(true);
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(RegistroUsuarios.this, error);
+                    }
+                } catch (Exception e) {
+                    javax.swing.JOptionPane.showMessageDialog(RegistroUsuarios.this, "Error inesperado.");
+                }
+            }
+        }.execute();
+    }
     }//GEN-LAST:event_AceptarActionPerformed
 
     /**

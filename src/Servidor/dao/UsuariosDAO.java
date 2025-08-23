@@ -37,4 +37,15 @@ public class UsuariosDAO {
             throw e;
         }
     }
+    public boolean verificarCredenciales(String cedula, String password) throws SQLException {
+        String sql = "SELECT 1 FROM usuarios WHERE cedula = ? AND contrasena = ?";
+        try (Connection c = Db.get();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, cedula);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
 }
