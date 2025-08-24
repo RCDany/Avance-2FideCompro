@@ -18,7 +18,7 @@ import Servidor.servicio.ProductoServicio;
 public class ServidorMain {
     
     public static void main(String[] args) throws Exception {
-        Db.ensureSchema(); // crea la BD/tabla si no existen
+        Db.ensureSchema();
         ExecutorService pool = Executors.newFixedThreadPool(16);
 
         try (ServerSocket server = new ServerSocket(5000)) {
@@ -83,17 +83,35 @@ public class ServidorMain {
                     return "EXISTS|" + exists;
                 }
                 if (line.startsWith("CLIENTE_REGISTRAR|")) {
-                    //CLIENTE_REGISTRAR|cedula|nombre|apellidos|correo|tipo
-                    String[] p = line.split("\\|", 6);
+                    //estructuira: CLIENTE_REGISTRAR|cedula|nombre|apellidos|correo|tipo|empresaNombre?
+                    String[] p = line.split("\\|", 7);
                     if (p.length < 6) return "ERROR|FORMATO";
+                    String empresa = (p.length >= 7) ? p[6] : "";
                     try {
-                        clienteServicio.registrar(p[1], p[2], p[3], p[4], p[5]);
+                        clienteServicio.registrar(p[1], p[2], p[3], p[4], p[5], empresa);
                         return "OK|REGISTRADO";
                     } catch (IllegalArgumentException iae) {
                         return "ERROR|VALIDACION|" + iae.getMessage();
                     } catch (java.sql.SQLException sqle) {
                         if ("CEDULA_DUPLICADA".equals(sqle.getMessage())) return "ERROR|CEDULA_DUPLICADA";
                         return "ERROR|SQL";
+                    } catch (Exception e) {
+                        return "ERROR|" + e.getMessage();
+                    }
+                }
+                if (line.startsWith("CLIENTE_GET|")) {
+                    String ced = line.split("\\|", 2)[1];
+                    try {
+                        String[] row = clienteServicio.obtenerCliente(ced);
+                        if (row == null) return "ERROR|NO_ENCONTRADO";
+                        for (int i = 0; i < row.length; i++) {
+                            if (row[i] == null) row[i] = "";
+                            row[i] = row[i].replace("|"," ").replace("^"," ").replace(";"," ");
+                        }
+                        
+                        return "OK|CLIENTE|" + String.join("^", row);
+                    } catch (IllegalArgumentException iae) {
+                        return "ERROR|VALIDACION|" + iae.getMessage();
                     } catch (Exception e) {
                         return "ERROR|" + e.getMessage();
                     }
@@ -132,7 +150,6 @@ public class ServidorMain {
                         StringBuilder sb = new StringBuilder("OK|");
                         for (int i = 0; i < lista.size(); i++) {
                             String[] it = lista.get(i);
-                            // Sanitizar separadores básicos
                             for (int k=0;k<it.length;k++) {
                                 if (it[k] == null) it[k] = "";
                                 it[k] = it[k].replace("|"," ").replace("^"," ").replace(";"," ");

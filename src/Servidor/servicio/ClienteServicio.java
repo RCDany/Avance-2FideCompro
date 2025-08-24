@@ -12,16 +12,25 @@ public class ClienteServicio {
     private final ClientesDAO dao = new ClientesDAO();
 
     public boolean checkCedula(String cedula) throws Exception {
-        if (cedula == null || !cedula.matches("\\d{9,10}")) throw new IllegalArgumentException("Cédula inválida");
+        cedula = norm(cedula);
+        if (!cedula.matches("\\d{9,10}")) throw new IllegalArgumentException("Cédula inválida");
         return dao.existeCedula(cedula);
     }
 
-    public void registrar(String ced, String nom, String ape, String correo, String tipo) throws Exception {
+    public void registrar(String ced, String nom, String ape, String correo, String tipo, String empresa) throws Exception {
+        ced = norm(ced);
         if (ced == null || !ced.matches("\\d{9,10}")) throw new IllegalArgumentException("Cédula inválida");
         if (isBlank(nom) || isBlank(ape) || isBlank(correo) || isBlank(tipo)) throw new IllegalArgumentException("Campos vacíos");
         if (!correo.contains("@") || !correo.contains(".")) throw new IllegalArgumentException("Correo inválido");
-        dao.registrar(ced, nom, ape, correo, tipo);
+        if ("Juridica".equalsIgnoreCase(tipo) && isBlank(empresa))
+            throw new IllegalArgumentException("Nombre de empresa requerido para cédula Jurídica");
+        dao.registrar(ced, nom, ape, correo, tipo, isBlank(empresa) ? "" : empresa.trim());
     }
-
+    public String[] obtenerCliente(String cedula) throws Exception {
+        cedula = norm(cedula);
+        if (!cedula.matches("\\d{9,10}")) throw new IllegalArgumentException("Cédula inválida");
+        return dao.obtenerPorCedula(cedula);
+    }
+    private String norm(String s) { return s == null ? "" : s.trim(); }
     private boolean isBlank(String s){ return s == null || s.trim().isEmpty(); }
 }

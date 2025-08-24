@@ -9,6 +9,9 @@ import java.sql.*;
  * @author nanil
  */
 public class Db {
+    // Codigos de DB
+    // X0Y32 este sale si existe
+    
     private static final String URL = "jdbc:derby:./data/tienda;create=true";
     
     public static Connection get() throws SQLException {
@@ -30,7 +33,7 @@ public class Db {
                 """);
                 System.out.println("[DB] Tabla 'usuarios' creada.");
             } catch (SQLException e) {
-                if (!"X0Y32".equals(e.getSQLState())) throw e; // X0Y32 = ya existe
+                if (!"X0Y32".equals(e.getSQLState())) throw e; 
                 System.out.println("[DB] Tabla 'usuarios' ya existía.");
             }
             try {
@@ -41,6 +44,7 @@ public class Db {
                         apellidos VARCHAR(100) NOT NULL,
                         correo VARCHAR(120) NOT NULL,
                         tipo_cedula VARCHAR(20) NOT NULL,
+                        empresa_nombre VARCHAR(150),
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     )
                 """);
@@ -62,7 +66,7 @@ public class Db {
                 """);
                 System.out.println("[DB] Tabla 'productos' creada.");
             } catch (SQLException e) {
-                if (!"X0Y32".equals(e.getSQLState())) throw e; // ya existe
+                if (!"X0Y32".equals(e.getSQLState())) throw e; 
                 System.out.println("[DB] Tabla 'productos' ya existía.");
             }
         }

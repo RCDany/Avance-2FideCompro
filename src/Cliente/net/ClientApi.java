@@ -67,11 +67,10 @@ public class ClientApi {
         throw new IOException("Respuesta inesperada: " + resp);
     }
 
-    public Resultado clienteRegistrar(String ced, String nom, String ape, String mail, String tipo) throws IOException {
-        String line = String.join("|", "CLIENTE_REGISTRAR", ced, nom, ape, mail, tipo);
+    public Resultado clienteRegistrar(String ced, String nom, String ape, String mail, String tipo, String empresa) throws IOException {
+        String line = String.join("|", "CLIENTE_REGISTRAR", ced, nom, ape, mail, tipo, empresa == null ? "" : empresa);
         String resp = send(line);
-        if (resp.startsWith("OK|")) return new Resultado(true, "Registrado");
-        return new Resultado(false, resp);
+        return resp.startsWith("OK|") ? new Resultado(true, "Registrado") : new Resultado(false, resp);
     }
     public boolean productoCheck(String codigo) throws IOException {
     String resp = send("PRODUCTO_CHECK|" + codigo);

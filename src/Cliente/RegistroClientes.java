@@ -12,12 +12,24 @@ package Cliente;
 public class RegistroClientes extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistroClientes.class.getName());
-
+    
     /**
      * Creates new form RegistroClientes
      */
     public RegistroClientes() {
         initComponents();
+        actualizarVisibilidadEmpresa();
+        TipoCedula.addActionListener(e -> actualizarVisibilidadEmpresa()); 
+    }
+    private void actualizarVisibilidadEmpresa() {
+        boolean juridica = "Juridica".equalsIgnoreCase((String) TipoCedula.getSelectedItem());
+        labelEmpresa.setVisible(juridica);
+        empresaNombre.setVisible(juridica);
+        labelNombre.setText(juridica ? "Nombre contacto" : "Nombre");
+        labelApellidos.setText(juridica ? "Apellidos contacto" : "Apellidos");
+        if (!juridica) {
+            empresaNombre.setText("");
+        }
     }
 
     /**
@@ -33,7 +45,7 @@ public class RegistroClientes extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        labelNombre = new javax.swing.JLabel();
         newNombre = new javax.swing.JTextField();
         newApellidos = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -43,7 +55,9 @@ public class RegistroClientes extends javax.swing.JFrame {
         Registrar = new javax.swing.JButton();
         Cancelar = new javax.swing.JButton();
         TipoCedula = new javax.swing.JComboBox<>();
-        jLabel11 = new javax.swing.JLabel();
+        labelApellidos = new javax.swing.JLabel();
+        empresaNombre = new javax.swing.JTextField();
+        labelEmpresa = new javax.swing.JLabel();
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Nombre");
@@ -55,8 +69,8 @@ public class RegistroClientes extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("Registro de Clientes | FideCompro");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Nombre");
+        labelNombre.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelNombre.setText("Nombre");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Email");
@@ -99,16 +113,30 @@ public class RegistroClientes extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setText("Apellidos");
+        labelApellidos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelApellidos.setText("Apellidos");
+
+        labelEmpresa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelEmpresa.setText("Empresa");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Cancelar)
+                .addGap(18, 18, 18)
+                .addComponent(Registrar)
+                .addGap(19, 19, 19))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(353, 353, 353)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(empresaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelEmpresa))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(63, 63, 63))
@@ -119,10 +147,10 @@ public class RegistroClientes extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(newNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel2))
+                                        .addComponent(labelNombre))
                                     .addGap(18, 18, 18)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel11)
+                                        .addComponent(labelApellidos)
                                         .addComponent(newApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(jLabel4)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -131,12 +159,6 @@ public class RegistroClientes extends javax.swing.JFrame {
                                 .addComponent(TipoCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel3))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Cancelar)
-                .addGap(18, 18, 18)
-                .addComponent(Registrar)
-                .addGap(19, 19, 19))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,8 +167,8 @@ public class RegistroClientes extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(81, 81, 81)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel11))
+                    .addComponent(labelNombre)
+                    .addComponent(labelApellidos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,7 +183,11 @@ public class RegistroClientes extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newcedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TipoCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(labelEmpresa)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(empresaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Registrar)
                     .addComponent(Cancelar))
@@ -202,7 +228,8 @@ public class RegistroClientes extends javax.swing.JFrame {
         String apellidos = newApellidos.getText().trim();
         String cedula    = newcedula.getText().trim();
         String email     = newemail.getText().trim();
-        String tipo      = (String) TipoCedula.getSelectedItem(); //"Fisica" o "Juridica"
+        String tipo      = (String) TipoCedula.getSelectedItem(); // "Fisica" o "Juridica"
+        String empresa   = empresaNombre.getText().trim();       
 
         if (nombre.isEmpty() || apellidos.isEmpty() || cedula.isEmpty() || email.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
@@ -216,6 +243,10 @@ public class RegistroClientes extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Correo inválido");
             return;
         }
+        if ("Juridica".equalsIgnoreCase(tipo) && empresa.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la Empresa (Razón social)");
+            return;
+        }
 
         Registrar.setEnabled(false);
         Cancelar.setEnabled(false);
@@ -227,16 +258,17 @@ public class RegistroClientes extends javax.swing.JFrame {
             @Override protected Boolean doInBackground() {
                 try {
                     Cliente.net.ClientApi api = new Cliente.net.ClientApi();
+
                     if (api.clienteCheck(cedula)) {
                         error = "La cédula " + tipo + " " + cedula + " ya está en uso.";
                         return false;
                     }
-                    var r = api.clienteRegistrar(cedula, nombre, apellidos, email, tipo);
-                    if (!r.ok) { 
-                        error = "Error del servidor: " + r.mensaje; 
-                        return false; 
-                    }
+                    Cliente.net.ClientApi.Resultado r =
+                        api.clienteRegistrar(cedula, nombre, apellidos, email, tipo, empresa);
+
+                    if (!r.ok) { error = "Error del servidor: " + r.mensaje; return false; }
                     return true;
+
                 } catch (Exception ex) {
                     error = "No se pudo contactar al servidor: " + ex.getMessage();
                     return false;
@@ -296,13 +328,15 @@ public class RegistroClientes extends javax.swing.JFrame {
     private javax.swing.JButton Registrar;
     private javax.swing.JComboBox<String> TipoCedula;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JTextField empresaNombre;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel labelApellidos;
+    private javax.swing.JLabel labelEmpresa;
+    private javax.swing.JLabel labelNombre;
     private javax.swing.JTextField newApellidos;
     private javax.swing.JTextField newNombre;
     private javax.swing.JTextField newcedula;
