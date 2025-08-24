@@ -11,6 +11,8 @@ import java.net.*;
 import Servidor.servicio.ClienteServicio;
 import java.util.concurrent.*;
 import Servidor.servicio.ProductoServicio;
+import Servidor.servicio.FacturaServicio;
+
 /**
  *
  * @author nanil
@@ -35,6 +37,8 @@ public class ServidorMain {
         private final UsuarioServicio service = new UsuarioServicio();
         private final ClienteServicio clienteServicio = new ClienteServicio();
         private final ProductoServicio productoServicio = new ProductoServicio();
+        private final FacturaServicio facturaServicio = new FacturaServicio();
+
 
         ClientHandler(Socket s) { this.s = s; }
 
@@ -163,6 +167,60 @@ public class ServidorMain {
                             if (i < lista.size()-1) sb.append(";");
                         }
                         return sb.toString();
+                    } catch (Exception e) {
+                        return "ERROR|" + e.getMessage();
+                    }
+                }
+                if (line.startsWith("PRODUCTO_GET|")) {
+                    String cod = line.split("\\|", 2)[1].trim().toUpperCase();
+                    try {
+                        String[] row = productoServicio.get(cod);
+                        if (row == null) return "ERROR|NO_EXISTE";
+                        for (int i = 0; i < row.length; i++) {
+                            if (row[i] == null) row[i] = "";
+                            row[i] = row[i].replace("|"," ").replace("^"," ").replace(";"," ");
+                        }
+                        return "OK|PROD|" + String.join("^", row);
+                    } catch (IllegalArgumentException iae) {
+                        return "ERROR|VALIDACION|" + iae.getMessage();
+                    } catch (Exception e) {
+                        return "ERROR|" + e.getMessage();
+                    }
+                }
+                if (line.startsWith("FACTURA_CREAR|")) {
+                    String[] p = line.split("\\|", 4);
+                    if (p.length < 4) return "ERROR|FORMATO";
+                    String clienteCed = p[1];
+                    String usuarioCed = p[2];
+                    String itemsStr   = p[3];
+
+                    try {
+                        java.util.List<FacturaServicio.Item> items = new java.util.ArrayList<>();
+                        if (!itemsStr.isBlank()) {
+                            for (String token : itemsStr.split(";")) {
+                                if (token.isBlank()) continue;
+                                String[] kv = token.split("\\^", 2);
+                                if (kv.length < 2) return "ERROR|FORMATO_ITEMS";
+                                String cod = kv[0].trim().toUpperCase();
+                                int cant = Integer.parseInt(kv[1]);
+                                items.add(new FacturaServicio.Item(cod, cant));
+                            }
+                        }
+                        var res = facturaServicio.crearFactura(clienteCed, usuarioCed, items);
+                        
+                        return "OK|FACTURA|" + res.id + "|" + res.subtotal + "|" + res.impuesto + "|" + res.total + "|TXT|" + res.textoBase64;
+
+                    } catch (NumberFormatException nfe) {
+                        return "ERROR|VALIDACION|Cantidad inválida";
+                    } catch (IllegalArgumentException iae) {
+                        return "ERROR|VALIDACION|" + iae.getMessage();
+                    } catch (IllegalStateException ise) {
+                        String msg = ise.getMessage();
+                        if (msg != null && (msg.startsWith("STOCK_INSUFICIENTE") || msg.startsWith("PRODUCTO_NO_EXISTE")
+                                || msg.equals("CLIENTE_NO_ENCONTRADO") || msg.equals("USUARIO_NO_ENCONTRADO"))) {
+                            return "ERROR|" + msg;
+                        }
+                        return "ERROR|ESTADO";
                     } catch (Exception e) {
                         return "ERROR|" + e.getMessage();
                     }

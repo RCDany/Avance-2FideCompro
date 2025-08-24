@@ -189,6 +189,7 @@ public class inicioDeSesion extends javax.swing.JFrame {
                 try {
                     if (get()) {
                         javax.swing.JOptionPane.showMessageDialog(window, "Bienvenido");
+                        Cliente.Sesion.setUsuarioCedula(ced);
                         new MenuPrincipal().setVisible(true);
                         window.dispose();
                     } else {

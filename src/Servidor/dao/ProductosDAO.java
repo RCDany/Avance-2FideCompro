@@ -55,4 +55,21 @@ public class ProductosDAO {
         }
         return out;
     }
+    public String[] obtenerPorCodigo(String codigo) throws SQLException {
+        String sql = "SELECT codigo, nombre, descripcion, precio, cantidad FROM productos WHERE codigo = ?";
+        try (Connection c = Db.get();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, codigo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) return null;
+                return new String[] {
+                    rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getBigDecimal(4).toPlainString(),
+                    String.valueOf(rs.getInt(5))
+                };
+            }
+        }
+    }
 }

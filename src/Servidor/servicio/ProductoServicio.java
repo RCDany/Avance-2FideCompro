@@ -33,6 +33,12 @@ public class ProductoServicio {
     public List<String[]> listar() throws Exception {
         return dao.listar();
     }
+    public String[] get(String codigo) throws Exception {
+        if (codigo == null) throw new IllegalArgumentException("Código vacío");
+        codigo = codigo.trim().toUpperCase();
+        if (!codigo.matches("PRD-\\d{3}")) throw new IllegalArgumentException("Código inválido");
+        return dao.obtenerPorCodigo(codigo);
+    }
 
     private boolean isBlank(String s){ return s == null || s.trim().isEmpty(); }
 }

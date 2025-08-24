@@ -85,23 +85,27 @@ public class ClientApi {
         return new Resultado(false, resp);
     }
 
-    public java.util.List<ProductoItem> productoListar() throws IOException {
+    public java.util.List<ProductoDet> productoListar() throws java.io.IOException {
         String resp = send("PRODUCTO_LISTAR");
-        if (!resp.startsWith("OK|")) throw new IOException("Respuesta inesperada: " + resp);
-        String payload = resp.substring("OK|".length());
-        java.util.List<ProductoItem> out = new java.util.ArrayList<>();
+        if (!resp.startsWith("OK|")) throw new java.io.IOException(resp);
+
+        String payload = resp.substring(3); // después de "OK|"
+        java.util.List<ProductoDet> out = new java.util.ArrayList<>();
         if (payload.isBlank()) return out;
 
-        for (String item : payload.split(";")) {
-            if (item.isBlank()) continue;
-            if (item.startsWith("PROD|")) item = item.substring("PROD|".length());
-            String[] f = item.split("\\^", -1);
-            if (f.length < 5) continue;
-            ProductoItem pi = new ProductoItem(f[0], f[1], f[2],
-                    Double.parseDouble(f[3]),
-                    Integer.parseInt(f[4]));
-            out.add(pi);
+        for (String block : payload.split(";")) {
+            if (block.isBlank()) continue;
+            if (!block.startsWith("PROD|")) continue;
+            String[] f = block.substring(5).split("\\^", -1);
+            out.add(new ProductoDet(
+                f[0],                   // codigo
+                f[1],                    // nombre
+                f[2],                     // desc
+                Double.parseDouble(f[3]),  // precio
+                Integer.parseInt(f[4])    // stock
+            ));
         }
+        out.sort(java.util.Comparator.comparing(p -> p.codigo));
         return out;
     }
 
@@ -112,5 +116,36 @@ public class ClientApi {
         public ProductoItem(String c, String n, String d, double p, int cant){
             this.codigo=c; this.nombre=n; this.descripcion=d; this.precio=p; this.cantidad=cant;
         }
+    }
+    public static class ProductoDet {
+        public final String codigo, nombre, descripcion;
+        public final double precio;
+        public final int stock;
+        public ProductoDet(String c, String n, String d, double p, int s) {
+            codigo=c; nombre=n; descripcion=d; precio=p; stock=s;
+        }
+    }
+
+    public ProductoDet productoGet(String codigo) throws java.io.IOException {
+        String resp = send("PRODUCTO_GET|" + codigo.trim().toUpperCase());
+        if (!resp.startsWith("OK|PROD|")) throw new java.io.IOException(resp);
+        String[] p = resp.substring("OK|PROD|".length()).split("\\^", -1);
+        return new ProductoDet(p[0], p[1], p[2], Double.parseDouble(p[3]), Integer.parseInt(p[4]));
+    }
+
+    public static class ResultadoFactura {
+        public final boolean ok; public final int id;
+        public final String mensaje, textoBase64;
+        public ResultadoFactura(boolean ok, int id, String msg, String b64){ this.ok=ok; this.id=id; this.mensaje=msg; this.textoBase64=b64; }
+    }
+
+    public ResultadoFactura facturaCrear(String clienteCed, String usuarioCed, java.util.List<String> itemsCodCant) throws java.io.IOException {
+        String items = String.join(";", itemsCodCant); 
+        String resp = send("FACTURA_CREAR|" + clienteCed + "|" + usuarioCed + "|" + items);
+        if (resp.startsWith("OK|FACTURA|")) {
+            String[] p = resp.split("\\|", 8);
+            return new ResultadoFactura(true, Integer.parseInt(p[2]), "OK", p[7]); 
+        }
+        return new ResultadoFactura(false, -1, resp, null);
     }
 }

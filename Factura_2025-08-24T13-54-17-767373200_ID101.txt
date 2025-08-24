@@ -1,0 +1,11 @@
+FideCompro - Factura
+ID: 101
+Cliente: 109920857
+Vendedor: 402660546
+--------------------------------------------------
+Código     Nombre              Cant     Precio   Subtotal
+PRD-001    Mouse                  5    8000,00   40000,00
+--------------------------------------------------
+Subtotal: 40000,00
+Impuesto (13%): 5200,00
+TOTAL: 45200,00

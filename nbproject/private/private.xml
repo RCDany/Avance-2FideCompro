@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Cliente/RegistroUsuarios.java</file>
-            <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Servidor/dao/UsuariosDAO.java</file>
-            <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Servidor/db/Db.java</file>
-            <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Servidor/net/ServidorMain.java</file>
-            <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Servidor/servicio/ClienteServicio.java</file>
+            <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Cliente/Ventas.java</file>
+            <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Cliente/VentanaMiniInventario.java</file>
             <file>file:/C:/Users/nanil/Proyectos%20JAVA/ProyectoFinal/src/Cliente/net/ClientApi.java</file>
         </group>
     </open-files>

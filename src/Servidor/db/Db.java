@@ -69,6 +69,42 @@ public class Db {
                 if (!"X0Y32".equals(e.getSQLState())) throw e; 
                 System.out.println("[DB] Tabla 'productos' ya existía.");
             }
+            try {
+                st.executeUpdate("""
+                    CREATE TABLE facturas (
+                        id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                        fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        cliente_cedula VARCHAR(12) NOT NULL,
+                        usuario_cedula VARCHAR(12) NOT NULL,
+                        subtotal DECIMAL(12,2) NOT NULL,
+                        impuesto DECIMAL(12,2) NOT NULL,
+                        total DECIMAL(12,2) NOT NULL
+                    )
+                """);
+                System.out.println("[DB] Tabla 'facturas' creada.");
+            } catch (SQLException e) {
+                if (!"X0Y32".equals(e.getSQLState())) throw e;
+                System.out.println("[DB] Tabla 'facturas' ya existía.");
+            }
+            try {
+                st.executeUpdate("""
+                    CREATE TABLE detalle_factura (
+                        factura_id INT NOT NULL,
+                        producto_codigo VARCHAR(20) NOT NULL,
+                        cantidad INT NOT NULL,
+                        precio_unitario DECIMAL(10,2) NOT NULL,
+                        subtotal_linea DECIMAL(12,2) NOT NULL,
+                        PRIMARY KEY (factura_id, producto_codigo),
+                        CONSTRAINT fk_df_factura FOREIGN KEY (factura_id) REFERENCES facturas(id),
+                        CONSTRAINT fk_df_producto FOREIGN KEY (producto_codigo) REFERENCES productos(codigo)
+                    )
+                """);
+                System.out.println("[DB] Tabla 'detalle_factura' creada.");
+            } catch (SQLException e) {
+                if (!"X0Y32".equals(e.getSQLState())) throw e;
+                System.out.println("[DB] Tabla 'detalle_factura' ya existía.");
+            }
+
         }
     }
 }

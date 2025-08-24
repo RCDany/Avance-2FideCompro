@@ -3,8 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Cliente;
+//En Db.ensureSchema() crea facturas y detalle_factura (te lo pasé antes).
 
-import java.util.ArrayList;
+//Crea Servidor/servicio/FacturaServicio.java (tal como te lo compartí antes; maneja transacción, descuenta stock y devuelve el texto en Base64).
+
+//En ServidorMain.procesar añade FACTURA_CREAR (el bloque que te di antes).
 
 /**
  *
@@ -13,8 +16,6 @@ import java.util.ArrayList;
 public class Ventas extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Ventas.class.getName());
-    private java.util.List<Servidor.Producto> productosVenta = new java.util.ArrayList<>();
-    private double subtotal = 0.0;
 
 
     /**
@@ -22,6 +23,29 @@ public class Ventas extends javax.swing.JFrame {
      */
     public Ventas() {
         initComponents();
+        
+    }
+    private static class Item {
+        String codigo, nombre;
+        double precio;
+        int cantidad;
+        Item(String c, String n, double p, int q){ codigo=c; nombre=n; precio=p; cantidad=q; }
+    }
+    private final java.util.List<Item> carrito = new java.util.ArrayList<>();
+    private double subtotalN = 0.0;
+
+    private void refrescarVista() {
+        AreaVenta.setText("");
+        for (Item it : carrito) {
+            AreaVenta.append(it.codigo + " - " + it.nombre + " x" + it.cantidad +
+                             " = ₡" + String.format("%.2f", it.precio * it.cantidad) + "\n");
+        }
+        subtotalN = carrito.stream().mapToDouble(i -> i.precio * i.cantidad).sum();
+        double iva = subtotalN * 0.13;
+        double tot = subtotalN + iva;
+        Subtotal.setText(String.format("₡%.2f", subtotalN));
+        IVA.setText(String.format("₡%.2f", iva));
+        total.setText(String.format("₡%.2f", tot));
     }
 
     /**
@@ -53,6 +77,9 @@ public class Ventas extends javax.swing.JFrame {
         total = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         cedula = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        cantidad = new javax.swing.JTextField();
+        verInventario = new javax.swing.JButton();
 
         jButton5.setText("Agregar a la Venta");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -77,6 +104,8 @@ public class Ventas extends javax.swing.JFrame {
                 agregarActionPerformed(evt);
             }
         });
+
+        CodigoProducto.setText("PRD-");
 
         AreaVenta.setColumns(20);
         AreaVenta.setRows(5);
@@ -129,6 +158,18 @@ public class Ventas extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Cedula");
 
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setText("Cantidad");
+
+        verInventario.setBackground(new java.awt.Color(51, 153, 255));
+        verInventario.setForeground(new java.awt.Color(255, 255, 255));
+        verInventario.setText("Ver Inventario");
+        verInventario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verInventarioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -145,24 +186,33 @@ public class Ventas extends javax.swing.JFrame {
                                 .addGap(90, 90, 90)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
                                         .addGap(63, 63, 63))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(agregar)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(eliminar))
-                                            .addComponent(CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel10)
-                                            .addComponent(cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel5)
+                                                    .addComponent(CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel11)
+                                                    .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                         .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(Cancelar1)
-                                .addGap(18, 18, 18)
-                                .addComponent(generarFactura)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(verInventario)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(Cancelar1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(generarFactura)))
                                 .addGap(17, 17, 17))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,12 +229,20 @@ public class Ventas extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(58, 58, 58)
+                .addGap(23, 23, 23)
+                .addComponent(verInventario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addGap(88, 88, 88)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(18, 18, 18)
+                        .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(agregar)
@@ -230,9 +288,7 @@ public class Ventas extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -240,45 +296,70 @@ public class Ventas extends javax.swing.JFrame {
 
     private void agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarActionPerformed
         // TODO add your handling code here:
-        String codigo = CodigoProducto.getText().trim();
-        if (codigo.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, ingrese un código de producto.");
+        String codigo = CodigoProducto.getText().trim().toUpperCase();
+        if (codigo.isEmpty()) { javax.swing.JOptionPane.showMessageDialog(this, "Ingrese código"); return; }
+
+        String cantStr = cantidad.getText().trim();
+        int cant;
+        try {
+            cant = Integer.parseInt(cantStr);
+            if (cant <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cantidad inválida");
             return;
         }
+        final int yaEnCarrito = carrito.stream()
+                .filter(it -> it.codigo.equalsIgnoreCase(codigo))
+                .mapToInt(it -> it.cantidad)
+                .sum();
 
-        java.util.List<Servidor.Producto> todosLosProductos = Servidor.Producto.LeerProductos();
-        Servidor.Producto productoEncontrado = null;
+        agregar.setEnabled(false);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
-        for (Servidor.Producto p : todosLosProductos) {
-            if (p.getCodigo().equalsIgnoreCase(codigo)) {
-                productoEncontrado = p;
-                break;
+        new javax.swing.SwingWorker<Item, Void>() {
+            String error = null;
+            @Override protected Item doInBackground() {
+                try {
+                    var api = new Cliente.net.ClientApi();
+                    var det = api.productoGet(codigo); // tiene: codigo, nombre, precio, stock
+
+                    if (cant + yaEnCarrito > det.stock) {
+                        int disponibleParaAgregar = Math.max(0, det.stock - yaEnCarrito);
+                        error = "Stock insuficiente. Disponible para agregar ahora: " + disponibleParaAgregar;
+                        return null;
+                    }
+                    return new Item(det.codigo, det.nombre, det.precio, cant);
+                } catch (Exception ex) {
+                    error = "Servidor: " + ex.getMessage();
+                    return null;
+                }
             }
-        }
+            @Override protected void done() {
+                agregar.setEnabled(true);
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                try {
+                    Item it = get();
+                    if (it == null) { javax.swing.JOptionPane.showMessageDialog(Ventas.this, error); return; }
 
-        if (productoEncontrado == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Producto no encontrado.");
-            return;
-        }
+                    
+                    boolean merged = false;
+                    for (Item x : carrito) {
+                        if (x.codigo.equalsIgnoreCase(it.codigo)) {
+                            x.cantidad += it.cantidad;   
+                            merged = true;
+                            break;
+                        }
+                    }
+                    if (!merged) carrito.add(it);
 
-        
-        productosVenta.add(productoEncontrado);
-        subtotal += productoEncontrado.getPrecio();
-
-        
-        AreaVenta.append(productoEncontrado.getNombre() + " - " + String.format("₡%.2f", productoEncontrado.getPrecio()) + "\n");
-
-        
-        double iva = subtotal * 0.13;
-        double totalFinal = subtotal + iva;
-
-        
-        Subtotal.setText(String.format("₡%.2f", subtotal));
-        IVA.setText(String.format("₡%.2f", iva));
-        total.setText(String.format("₡%.2f", totalFinal));
-
-        
-        CodigoProducto.setText("");
+                    refrescarVista();
+                    CodigoProducto.setText("");
+                    cantidad.setText("");
+                } catch (Exception e) {
+                    javax.swing.JOptionPane.showMessageDialog(Ventas.this, "Error inesperado");
+                }
+            }
+        }.execute();
 
     }//GEN-LAST:event_agregarActionPerformed
 
@@ -288,26 +369,53 @@ public class Ventas extends javax.swing.JFrame {
 
     private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
         // TODO add your handling code here:
-        if (productosVenta.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "No hay productos en la venta.");
+        String codigo = CodigoProducto.getText().trim().toUpperCase();
+        if (codigo.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ingrese el código a eliminar");
+            return;
+        }
+        String cantStr = cantidad.getText().trim();
+        int cant;
+        try {
+            cant = Integer.parseInt(cantStr);
+            if (cant <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cantidad a eliminar inválida");
             return;
         }
 
-        Servidor.Producto eliminado = productosVenta.remove(productosVenta.size() - 1);
-        subtotal -= eliminado.getPrecio();
-
         
-        AreaVenta.setText("");
-        for (Servidor.Producto p : productosVenta) {
-            AreaVenta.append(p.getNombre() + " - " + String.format("₡%.2f", p.getPrecio()) + "\n");
+        int totalEnCarrito = 0;
+        for (Item it : carrito) {
+            if (it.codigo.equalsIgnoreCase(codigo)) totalEnCarrito += it.cantidad;
+        }
+        if (totalEnCarrito == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ese producto no está en la venta.");
+            return;
+        }
+        if (cant > totalEnCarrito) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Solo hay " + totalEnCarrito + " unidades de " + codigo + " en la venta.");
+            return;
         }
 
-        double iva = subtotal * 0.13;
-        double totalFinal = subtotal + iva;
+       
+        int aEliminar = cant;
+        for (int i = carrito.size() - 1; i >= 0 && aEliminar > 0; i--) {
+            Item it = carrito.get(i);
+            if (!it.codigo.equalsIgnoreCase(codigo)) continue;
 
-        Subtotal.setText(String.format("₡%.2f", subtotal));
-        IVA.setText(String.format("₡%.2f", iva));
-        total.setText(String.format("₡%.2f", totalFinal));
+            if (it.cantidad > aEliminar) {
+                it.cantidad -= aEliminar;
+                aEliminar = 0;
+            } else {
+                aEliminar -= it.cantidad;
+                carrito.remove(i);
+            }
+        }
+
+        refrescarVista();
+        CodigoProducto.setText("PRD-");
+        cantidad.setText("");
 
     }//GEN-LAST:event_eliminarActionPerformed
 
@@ -319,76 +427,71 @@ public class Ventas extends javax.swing.JFrame {
 
     private void generarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarFacturaActionPerformed
         // TODO add your handling code here:
-        if (productosVenta.isEmpty()) {
+        if (carrito.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No hay productos en la venta.");
             return;
         }
 
-        String cedulaTexto = cedula.getText().trim();
-        if (cedulaTexto.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Debe ingresar la cédula del cliente.");
+        String clienteCed = cedula.getText().trim();
+        if (!clienteCed.matches("\\d{9,10}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cédula de cliente inválida");
             return;
         }
 
-        ArrayList<Servidor.Cliente> clientes = Servidor.Cliente.LeerClientes();
-        Servidor.Cliente clienteEncontrado = null;
-        for (Servidor.Cliente c : clientes) {
-            if (c.getCedula().equalsIgnoreCase(cedulaTexto)) {
-                clienteEncontrado = c;
-                break;
+        String usuarioCed = Cliente.Sesion.getUsuarioCedula();
+        if (usuarioCed == null || !usuarioCed.matches("\\d{9,10}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay usuario en sesión. Inicie sesión nuevamente.");
+            return;
+        }
+
+        generarFactura.setEnabled(false);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        new javax.swing.SwingWorker<Boolean, Void>() {
+            String error = null, base64 = null; int facturaId = -1;
+
+            @Override protected Boolean doInBackground() {
+                try {
+                    var api = new Cliente.net.ClientApi();
+                    java.util.List<String> codCant = new java.util.ArrayList<>();
+                    for (Item it : carrito) codCant.add(it.codigo + "^" + it.cantidad);
+                    var r = api.facturaCrear(clienteCed, usuarioCed, codCant);
+                    if (!r.ok) { error = r.mensaje; return false; }
+                    base64 = r.textoBase64; facturaId = r.id;
+                    return true;
+                } catch (Exception ex) { error = "Servidor: " + ex.getMessage(); return false; }
             }
-        }
 
-        if (clienteEncontrado == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Cliente no registrado. Regístrelo primero.");
-            return;
-        }
+            @Override protected void done() {
+                generarFactura.setEnabled(true);
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                try {
+                    if (!get()) { javax.swing.JOptionPane.showMessageDialog(Ventas.this, error); return; }
 
-        
-        StringBuilder factura = new StringBuilder();
-        factura.append("----- FideCompro -----\n");
-        factura.append("Factura generada el ").append(java.time.LocalDateTime.now()).append("\n\n");
-        factura.append("Cliente: ").append(clienteEncontrado.getNombre()).append(" ").append(clienteEncontrado.getApellidos()).append("\n");
-        factura.append("Cédula: ").append(clienteEncontrado.getCedula()).append("\n\n");
-        factura.append("Productos:\n");
+                    byte[] bytes = java.util.Base64.getDecoder().decode(base64);
+                    String texto = new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
+                    String nombreArchivo = "Factura_" + java.time.LocalDateTime.now()
+                            .toString().replace(":", "-").replace(".", "-") + "_ID" + facturaId + ".txt";
+                    try (java.io.FileWriter w = new java.io.FileWriter(nombreArchivo)) { w.write(texto); }
+                    javax.swing.JOptionPane.showMessageDialog(Ventas.this, "Factura generada:\n" + nombreArchivo);
 
-        for (Servidor.Producto p : productosVenta) {
-            factura.append(" - ").append(p.getNombre()).append(": ₡").append(String.format("%.2f", p.getPrecio())).append("\n");
-        }
+                    carrito.clear(); refrescarVista();
+                    CodigoProducto.setText(""); cantidad.setText(""); cedula.setText("");
 
-        factura.append("\nSubtotal: ").append(Subtotal.getText());
-        factura.append("\nIVA (13%): ").append(IVA.getText());
-        factura.append("\nTotal: ").append(total.getText());
-        factura.append("\n---------------------------\n");
-
-        //Guardar en txt
-        try {
-            String nombreArchivo = "Factura_" + java.time.LocalDateTime.now()
-                    .toString().replace(":", "-").replace(".", "-") + ".txt";
-            java.io.FileWriter writer = new java.io.FileWriter(nombreArchivo);
-            writer.write(factura.toString());
-            writer.close();
-            javax.swing.JOptionPane.showMessageDialog(this, "Factura generada y guardada como:\n" + nombreArchivo);
-        } catch (java.io.IOException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar la factura: " + e.getMessage());
-            return;
-        }
-
-        
-        productosVenta.clear();
-        subtotal = 0.0;
-        Subtotal.setText("₡0.00");
-        IVA.setText("₡0.00");
-        total.setText("₡0.00");
-        AreaVenta.setText("");
-        CodigoProducto.setText("");
-        cedula.setText("");
-
-        
-        
-        
+                } catch (Exception e) {
+                    javax.swing.JOptionPane.showMessageDialog(Ventas.this, "Error inesperado al guardar la factura.");
+                }
+            }
+        }.execute();
         
     }//GEN-LAST:event_generarFacturaActionPerformed
+
+    private void verInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verInventarioActionPerformed
+        // TODO add your handling code here:
+        VentanaMiniInventario v = new VentanaMiniInventario();
+        v.setLocationRelativeTo(this); // centra respecto a Ventas
+        v.setVisible(true);
+    }//GEN-LAST:event_verInventarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -422,12 +525,14 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JLabel IVA;
     private javax.swing.JLabel Subtotal;
     private javax.swing.JButton agregar;
+    private javax.swing.JTextField cantidad;
     private javax.swing.JTextField cedula;
     private javax.swing.JButton eliminar;
     private javax.swing.JButton generarFactura;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -436,5 +541,6 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel total;
+    private javax.swing.JButton verInventario;
     // End of variables declaration//GEN-END:variables
 }
