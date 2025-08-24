@@ -148,4 +148,32 @@ public class ClientApi {
         }
         return new ResultadoFactura(false, -1, resp, null);
     }
+    public boolean productoAjustar(String codigo, int delta) throws Exception {
+        String r = send("PRODUCTO_AJUSTAR|" + codigo + "|" + delta);
+        if (r.startsWith("OK|")) return true;
+        if (r.startsWith("ERROR|STOCK_NEGATIVO")) throw new IllegalArgumentException("El stock no puede quedar negativo");
+        throw new Exception(r);
+    }
+
+    public boolean productoEliminar(String codigo) throws Exception {
+        String r = send("PRODUCTO_ELIMINAR|" + codigo);
+        if (r.startsWith("OK|")) return true;
+        if (r.startsWith("ERROR|TIENE_FACTURAS")) throw new IllegalStateException("No se puede eliminar: ya tiene facturas");
+        if (r.startsWith("ERROR|NO_EXISTE")) throw new IllegalStateException("Código no existe");
+        throw new Exception(r);
+    }
+
+    public java.util.List<ProductoDet> productoBuscarNombre(String patron) throws Exception {
+        String r = send("PRODUCTO_BUSCAR_NOMBRE|" + patron);
+        if (!r.startsWith("OK|")) throw new Exception(r);
+        java.util.List<ProductoDet> out = new java.util.ArrayList<>();
+        String body = r.substring(3);
+        if (body.isBlank()) return out;
+        for (String tok : body.split(";")) {
+            if (!tok.startsWith("PROD|")) continue;
+            String[] f = tok.substring(5).split("\\^", -1);
+            out.add(new ProductoDet(f[0], f[1], f[2], Double.parseDouble(f[3]), Integer.parseInt(f[4])));
+        }
+        return out;
+    }
 }

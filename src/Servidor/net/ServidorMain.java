@@ -225,6 +225,51 @@ public class ServidorMain {
                         return "ERROR|" + e.getMessage();
                     }
                 }
+                if (line.startsWith("PRODUCTO_AJUSTAR|")) {
+                    String[] p = line.split("\\|", 3);
+                    if (p.length < 3) return "ERROR|FORMATO";
+                    try {
+                        int delta = Integer.parseInt(p[2]);
+                        productoServicio.ajustarStock(p[1], delta);
+                        return "OK|AJUSTADO";
+                    } catch (NumberFormatException nfe) { return "ERROR|VALIDACION|Delta inválido"; }
+                      catch (IllegalStateException ise) {
+                        if ("STOCK_NEGATIVO".equals(ise.getMessage())) return "ERROR|STOCK_NEGATIVO";
+                        return "ERROR|ESTADO";
+                    } catch (Exception e) { return "ERROR|" + e.getMessage(); }
+                }
+
+                if (line.startsWith("PRODUCTO_ELIMINAR|")) {
+                    String cod = line.split("\\|", 2)[1];
+                    try {
+                        productoServicio.eliminar(cod);
+                        return "OK|ELIMINADO";
+                    } catch (IllegalStateException ise) {
+                        String m = ise.getMessage();
+                        if ("TIENE_FACTURAS".equals(m)) return "ERROR|TIENE_FACTURAS";
+                        if ("NO_EXISTE".equals(m)) return "ERROR|NO_EXISTE";
+                        return "ERROR|ESTADO";
+                    } catch (Exception e) { return "ERROR|" + e.getMessage(); }
+                }
+
+                if (line.startsWith("PRODUCTO_BUSCAR_NOMBRE|")) {
+                    String patron = line.split("\\|", 2)[1];
+                    try {
+                        var lista = productoServicio.buscarPorNombre(patron);
+                        StringBuilder sb = new StringBuilder("OK|");
+                        for (int i=0;i<lista.size();i++) {
+                            String[] it = lista.get(i);
+                            for (int k=0;k<it.length;k++) {
+                                if (it[k]==null) it[k]="";
+                                it[k]=it[k].replace("|"," ").replace("^"," ").replace(";"," ");
+                            }
+                            sb.append("PROD|").append(it[0]).append("^").append(it[1]).append("^")
+                              .append(it[2]).append("^").append(it[3]).append("^").append(it[4]);
+                            if (i<lista.size()-1) sb.append(";");
+                        }
+                        return sb.toString();
+                    } catch (Exception e) { return "ERROR|" + e.getMessage(); }
+                }
                 return "ERROR|COMANDO";
             } catch (IllegalArgumentException iae) {
                 return "ERROR|VALIDACION|" + iae.getMessage();
