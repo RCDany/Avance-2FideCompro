@@ -33,6 +33,38 @@ public class Db {
                 if (!"X0Y32".equals(e.getSQLState())) throw e; // X0Y32 = ya existe
                 System.out.println("[DB] Tabla 'usuarios' ya existía.");
             }
+            try {
+                st.executeUpdate("""
+                    CREATE TABLE clientes (
+                        cedula VARCHAR(12) PRIMARY KEY,
+                        nombre VARCHAR(100) NOT NULL,
+                        apellidos VARCHAR(100) NOT NULL,
+                        correo VARCHAR(120) NOT NULL,
+                        tipo_cedula VARCHAR(20) NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """);
+                System.out.println("[DB] Tabla 'clientes' creada.");
+            } catch (SQLException e) {
+                if (!"X0Y32".equals(e.getSQLState())) throw e;
+                System.out.println("[DB] Tabla 'clientes' ya existía.");
+            }
+            try {
+                st.executeUpdate("""
+                    CREATE TABLE productos (
+                        codigo VARCHAR(20) PRIMARY KEY,
+                        nombre VARCHAR(100) NOT NULL,
+                        descripcion VARCHAR(200),
+                        precio DECIMAL(10,2) NOT NULL,
+                        cantidad INT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """);
+                System.out.println("[DB] Tabla 'productos' creada.");
+            } catch (SQLException e) {
+                if (!"X0Y32".equals(e.getSQLState())) throw e; // ya existe
+                System.out.println("[DB] Tabla 'productos' ya existía.");
+            }
         }
     }
 }

@@ -4,9 +4,6 @@
  */
 package Cliente;
 
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import Servidor.Cliente;
 
 /**
  *
@@ -201,40 +198,68 @@ public class RegistroClientes extends javax.swing.JFrame {
 
     private void RegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarActionPerformed
         // TODO add your handling code here:
-        String nombre = newNombre.getText();
-        String apellidos = newApellidos.getText();
-        String cedula = newcedula.getText();
-        String email = newemail.getText();
-        String tipoCedula = TipoCedula.getSelectedItem().toString();
-        
-        if (email.isEmpty() || nombre.isEmpty() || cedula.isEmpty() || apellidos.isEmpty()){
+        String nombre    = newNombre.getText().trim();
+        String apellidos = newApellidos.getText().trim();
+        String cedula    = newcedula.getText().trim();
+        String email     = newemail.getText().trim();
+        String tipo      = (String) TipoCedula.getSelectedItem(); //"Fisica" o "Juridica"
+
+        if (nombre.isEmpty() || apellidos.isEmpty() || cedula.isEmpty() || email.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
             return;
         }
-        Cliente nuevo = new Cliente(tipoCedula, cedula, nombre, apellidos, email);
+        if (!cedula.matches("\\d{9,10}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cédula inválida (9–10 dígitos)");
+            return;
+        }
+        if (!email.contains("@") || !email.contains(".")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Correo inválido");
+            return;
+        }
 
-        if (!nuevo.validarCorreo()){
-            JOptionPane.showMessageDialog(this, "Correo inválido");
-            return;
-        }
-        if (!nuevo.validarCedula()){
-            JOptionPane.showMessageDialog(this, "Cedula inválida");
-            return;
-        }
-        ArrayList<Cliente> listaClientes = Cliente.LeerClientes();
-        
-        for (Cliente u :listaClientes) {
-            if (u.getCedula().equals(cedula) || (u.getTipoCedula().equals(tipoCedula))){
-                javax.swing.JOptionPane.showMessageDialog(this, "El numero de cedula " + tipoCedula + " " + cedula + " ya esta en uso.");
-                return;
+        Registrar.setEnabled(false);
+        Cancelar.setEnabled(false);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        new javax.swing.SwingWorker<Boolean, Void>() {
+            String error = null;
+
+            @Override protected Boolean doInBackground() {
+                try {
+                    Cliente.net.ClientApi api = new Cliente.net.ClientApi();
+                    if (api.clienteCheck(cedula)) {
+                        error = "La cédula " + tipo + " " + cedula + " ya está en uso.";
+                        return false;
+                    }
+                    var r = api.clienteRegistrar(cedula, nombre, apellidos, email, tipo);
+                    if (!r.ok) { 
+                        error = "Error del servidor: " + r.mensaje; 
+                        return false; 
+                    }
+                    return true;
+                } catch (Exception ex) {
+                    error = "No se pudo contactar al servidor: " + ex.getMessage();
+                    return false;
+                }
             }
-        }
-        listaClientes.add(nuevo);
-        Cliente.EscribirCliente(listaClientes);
-        javax.swing.JOptionPane.showMessageDialog(this, "Cliente Registrado Correctamente");
-        
-        this.setVisible(false);
-        new MenuPrincipal().setVisible(true);
+
+            @Override protected void done() {
+                Registrar.setEnabled(true);
+                Cancelar.setEnabled(true);
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                try {
+                    if (get()) {
+                        javax.swing.JOptionPane.showMessageDialog(RegistroClientes.this, "Cliente registrado correctamente");
+                        RegistroClientes.this.setVisible(false);
+                        new MenuPrincipal().setVisible(true);
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(RegistroClientes.this, error);
+                    }
+                } catch (Exception e) {
+                    javax.swing.JOptionPane.showMessageDialog(RegistroClientes.this, "Error inesperado.");
+                }
+            }
+        }.execute();
     }//GEN-LAST:event_RegistrarActionPerformed
 
     private void TipoCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoCedulaActionPerformed

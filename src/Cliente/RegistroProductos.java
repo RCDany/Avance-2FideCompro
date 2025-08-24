@@ -233,54 +233,78 @@ public class RegistroProductos extends javax.swing.JFrame {
         // TODO add your handling code here:
         String nombre = NombreProducto.getText().trim();
         String descripcion = descripcionProducto.getText().trim();
-        String codigo = codigoProducto.getText().trim();
+        String codigo = codigoProducto.getText().trim().toUpperCase(); 
         String cantidadTexto = cantidadProducto.getText().trim();
         String precioTexto = Precio.getText().trim();
+
         if (nombre.isEmpty() || codigo.isEmpty() || cantidadTexto.isEmpty() || precioTexto.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Nombre, código, cantidad y precio son obligatorios.");
             return;
         }
-
-        
         if (!codigo.matches("PRD-\\d{3}")) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El código debe tener el formato PRD-XXX, donde XXX son números.");
+            javax.swing.JOptionPane.showMessageDialog(this, "El código debe tener el formato PRD-XXX (ej: PRD-001).");
             return;
         }
 
         int cantidad;
+        double precio;
         try {
             cantidad = Integer.parseInt(cantidadTexto);
             if (cantidad < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "La cantidad debe ser un número entero positivo.");
+            javax.swing.JOptionPane.showMessageDialog(this, "La cantidad debe ser un entero no negativo.");
             return;
         }
-
-        double precio = 0.0; 
-         try {
+        try {
             precio = Double.parseDouble(precioTexto);
             if (precio < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El precio debe ser un número válido y positivo.");
+            javax.swing.JOptionPane.showMessageDialog(this, "El precio debe ser un número positivo (usa punto decimal).");
             return;
         }
-        ArrayList<Producto> listaProductos = Producto.LeerProductos();
 
-        for (Producto p : listaProductos) {
-            if (p.getCodigo().equalsIgnoreCase(codigo)) {
-                javax.swing.JOptionPane.showMessageDialog(this, "El código de producto ya está en uso.");
-                return;
+        Aceptar.setEnabled(false);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        final int cantidadFinal = cantidad;
+        final double precioFinal = precio;
+
+        new javax.swing.SwingWorker<Boolean, Void>() {
+            String error = null;
+
+            @Override protected Boolean doInBackground() {
+                try {
+                    Cliente.net.ClientApi api = new Cliente.net.ClientApi();
+                    if (api.productoCheck(codigo)) {
+                        error = "El código de producto ya está en uso.";
+                        return false;
+                    }
+                    var r = api.productoRegistrar(codigo, nombre, descripcion, precioFinal, cantidadFinal);
+                    if (!r.ok) { error = "Error del servidor: " + r.mensaje; return false; }
+                    return true;
+                } catch (Exception ex) {
+                    error = "No se pudo contactar al servidor: " + ex.getMessage();
+                    return false;
+                }
             }
-        }
 
-        Producto nuevo = new Producto(codigo, nombre, descripcion, precio, cantidad);
-        listaProductos.add(nuevo);
-        Producto.EscribirProducto(listaProductos);
+            @Override protected void done() {
+                Aceptar.setEnabled(true);
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                try {
+                    if (get()) {
+                        javax.swing.JOptionPane.showMessageDialog( /* parent */ null, "Producto registrado correctamente.");
 
-        javax.swing.JOptionPane.showMessageDialog(this, "Producto registrado correctamente.");
-
-        this.setVisible(false);
-        new MenuPrincipal().setVisible(true);
+                        setVisible(false);
+                        new MenuPrincipal().setVisible(true);
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog( /* parent */ null, error);
+                    }
+                } catch (Exception e) {
+                    javax.swing.JOptionPane.showMessageDialog( /* parent */ null, "Error inesperado.");
+                }
+            }
+        }.execute();
     }//GEN-LAST:event_AceptarActionPerformed
 
     /**

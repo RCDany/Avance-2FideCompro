@@ -61,4 +61,57 @@ public class ClientApi {
         public final String mensaje;
         public Resultado(boolean ok, String mensaje) { this.ok = ok; this.mensaje = mensaje; }
     }
+    public boolean clienteCheck(String cedula) throws IOException {
+        String resp = send("CLIENTE_CHECK|" + cedula);
+        if (resp.startsWith("EXISTS|")) return Boolean.parseBoolean(resp.substring("EXISTS|".length()));
+        throw new IOException("Respuesta inesperada: " + resp);
+    }
+
+    public Resultado clienteRegistrar(String ced, String nom, String ape, String mail, String tipo) throws IOException {
+        String line = String.join("|", "CLIENTE_REGISTRAR", ced, nom, ape, mail, tipo);
+        String resp = send(line);
+        if (resp.startsWith("OK|")) return new Resultado(true, "Registrado");
+        return new Resultado(false, resp);
+    }
+    public boolean productoCheck(String codigo) throws IOException {
+    String resp = send("PRODUCTO_CHECK|" + codigo);
+    if (resp.startsWith("EXISTS|")) return Boolean.parseBoolean(resp.substring("EXISTS|".length()));
+    throw new IOException("Respuesta inesperada: " + resp);
+    }
+
+    public Resultado productoRegistrar(String cod, String nom, String desc, double precio, int cant) throws IOException {
+        String line = String.join("|", "PRODUCTO_REGISTRAR", cod, nom, desc, String.valueOf(precio), String.valueOf(cant));
+        String resp = send(line);
+        if (resp.startsWith("OK|")) return new Resultado(true, "Registrado");
+        return new Resultado(false, resp);
+    }
+
+    public java.util.List<ProductoItem> productoListar() throws IOException {
+        String resp = send("PRODUCTO_LISTAR");
+        if (!resp.startsWith("OK|")) throw new IOException("Respuesta inesperada: " + resp);
+        String payload = resp.substring("OK|".length());
+        java.util.List<ProductoItem> out = new java.util.ArrayList<>();
+        if (payload.isBlank()) return out;
+
+        for (String item : payload.split(";")) {
+            if (item.isBlank()) continue;
+            if (item.startsWith("PROD|")) item = item.substring("PROD|".length());
+            String[] f = item.split("\\^", -1);
+            if (f.length < 5) continue;
+            ProductoItem pi = new ProductoItem(f[0], f[1], f[2],
+                    Double.parseDouble(f[3]),
+                    Integer.parseInt(f[4]));
+            out.add(pi);
+        }
+        return out;
+    }
+
+    public static class ProductoItem {
+        public final String codigo, nombre, descripcion;
+        public final double precio;
+        public final int cantidad;
+        public ProductoItem(String c, String n, String d, double p, int cant){
+            this.codigo=c; this.nombre=n; this.descripcion=d; this.precio=p; this.cantidad=cant;
+        }
+    }
 }
