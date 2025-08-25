@@ -46,8 +46,10 @@ public class ServidorMain {
             String who = s.getRemoteSocketAddress().toString();
             System.out.println("[NET] Conectado: " + who);
             try (s;
-                 BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()))) {
+                 BufferedReader in = new BufferedReader(
+                    new InputStreamReader(s.getInputStream(), java.nio.charset.StandardCharsets.UTF_8));
+                BufferedWriter out = new BufferedWriter(
+                    new OutputStreamWriter(s.getOutputStream(), java.nio.charset.StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = in.readLine()) != null) {
                     String resp = procesar(line);
@@ -268,6 +270,75 @@ public class ServidorMain {
                             if (i<lista.size()-1) sb.append(";");
                         }
                         return sb.toString();
+                    } catch (Exception e) { return "ERROR|" + e.getMessage(); }
+                }
+                if (line.equals("CLIENTE_LISTAR")) {
+                    try {
+                        var lista = clienteServicio.listar();
+                        StringBuilder sb = new StringBuilder("OK|");
+                        for (int i = 0; i < lista.size(); i++) {
+                            String[] it = lista.get(i);
+                            for (int k=0;k<it.length;k++) {
+                                if (it[k] == null) it[k] = "";
+                                it[k] = it[k].replace("|"," ").replace("^"," ").replace(";"," ");
+                            }
+                            sb.append("CLI|")
+                              .append(it[0]).append("^") // cedula
+                              .append(it[1]).append("^") // nombre
+                              .append(it[2]).append("^") // apellidos
+                              .append(it[3]).append("^") // correo
+                              .append(it[4]).append("^") // tipo_cedula
+                              .append(it[5]);            // empresa
+                            if (i < lista.size()-1) sb.append(";");
+                        }
+                        return sb.toString();
+                    } catch (Exception e) { return "ERROR|" + e.getMessage(); }
+                }
+                if (line.startsWith("CLIENTE_BUSCAR_NOMBRE|")) {
+                    String[] p = line.split("\\|", 3);
+                    String nom = (p.length>1? p[1] : "");
+                    String ape = (p.length>2? p[2] : "");
+                    try {
+                        var lista = clienteServicio.buscarPorNombre(nom, ape);
+                        StringBuilder sb = new StringBuilder("OK|");
+                        for (int i = 0; i < lista.size(); i++) {
+                            String[] it = lista.get(i);
+                            for (int k=0;k<it.length;k++) {
+                                if (it[k] == null) it[k] = "";
+                                it[k] = it[k].replace("|"," ").replace("^"," ").replace(";"," ");
+                            }
+                            sb.append("CLI|")
+                              .append(it[0]).append("^")
+                              .append(it[1]).append("^")
+                              .append(it[2]).append("^")
+                              .append(it[3]).append("^")
+                              .append(it[4]).append("^")
+                              .append(it[5]);
+                            if (i < lista.size()-1) sb.append(";");
+                        }
+                        return sb.toString();
+                    } catch (Exception e) { return "ERROR|" + e.getMessage(); }
+                }
+                if (line.startsWith("CLIENTE_ACTUALIZAR|")) {
+                    String[] p = line.split("\\|", 6);
+                    if (p.length < 6) return "ERROR|FORMATO";
+                    try {
+                        clienteServicio.actualizar(p[1], p[2], p[3], p[4], p[5]);
+                        return "OK|ACTUALIZADO";
+                    } catch (IllegalArgumentException iae) {
+                        return "ERROR|VALIDACION|" + iae.getMessage();
+                    } catch (Exception e) { return "ERROR|" + e.getMessage(); }
+                }
+                if (line.startsWith("CLIENTE_ELIMINAR|")) {
+                    String ced = line.split("\\|", 2)[1];
+                    try {
+                        clienteServicio.eliminar(ced);
+                        return "OK|ELIMINADO";
+                    } catch (IllegalStateException ise) {
+                        String m = ise.getMessage();
+                        if ("TIENE_FACTURAS".equals(m)) return "ERROR|CLIENTE_TIENE_FACTURAS";
+                        if ("NO_ENCONTRADO".equals(m)) return "ERROR|NO_ENCONTRADO";
+                        return "ERROR|ESTADO";
                     } catch (Exception e) { return "ERROR|" + e.getMessage(); }
                 }
                 return "ERROR|COMANDO";

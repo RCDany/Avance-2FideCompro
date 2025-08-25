@@ -22,6 +22,7 @@ public class ClientApi {
         Socket s = new Socket();
         s.connect(new InetSocketAddress(host, port), timeoutMillis);
         s.setSoTimeout(timeoutMillis);
+        
         try (s;
              BufferedWriter out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8));
              BufferedReader in  = new BufferedReader(new InputStreamReader(s.getInputStream(),  StandardCharsets.UTF_8))) {
@@ -176,4 +177,77 @@ public class ClientApi {
         }
         return out;
     }
+    public static class ClienteDet {
+        public final String cedula, nombre, apellidos, correo, tipoCedula, empresa;
+        public ClienteDet(String ced, String nom, String ape, String cor, String tipo, String emp){
+            this.cedula=ced; this.nombre=nom; this.apellidos=ape; this.correo=cor; this.tipoCedula=tipo; this.empresa=emp;
+        }
+        public boolean esJuridica(){ return "JURIDICA".equalsIgnoreCase(tipoCedula); }
+        @Override public String toString(){
+            return cedula + " | " + nombre + " " + apellidos + " | " + correo +
+                   (esJuridica() ? " | " + empresa : "");
+        }
+    }
+    public ClienteDet clienteGet(String cedula) throws Exception {
+        String resp = send("CLIENTE_GET|" + cedula);
+        if (resp.startsWith("OK|CLIENTE|")) {
+            String[] t = resp.substring("OK|CLIENTE|".length()).split("\\^", -1);
+            
+            if (t.length >= 6) return new ClienteDet(t[0], t[1], t[2], t[3], t[4], t[5]);
+            throw new IllegalStateException("FORMATO_CLIENTE_GET");
+        }
+        if (resp.startsWith("ERROR|NO_ENCONTRADO")) return null;
+        throw new IllegalStateException(resp);
+    }
+    public java.util.List<ClienteDet> clienteListar() throws Exception {
+        String resp = send("CLIENTE_LISTAR");
+        if (!resp.startsWith("OK|")) throw new IllegalStateException(resp);
+        java.util.List<ClienteDet> out = new java.util.ArrayList<>();
+        String body = resp.substring("OK|".length());
+        if (body.isBlank()) return out;
+        for (String row : body.split(";", -1)) {
+            if (row.isBlank()) continue;
+            String[] t = row.replaceFirst("^CLI\\|", "").split("\\^", -1);
+            if (t.length >= 6) out.add(new ClienteDet(t[0], t[1], t[2], t[3], t[4], t[5]));
+        }
+        return out;
+    }
+    public java.util.List<ClienteDet> clienteBuscarNombre(String nombre, String apellidos) throws Exception {
+        String n = sanitize(nombre), a = sanitize(apellidos==null?"":apellidos);
+        String resp = send("CLIENTE_BUSCAR_NOMBRE|" + n + "|" + a);
+        if (!resp.startsWith("OK|")) throw new IllegalStateException(resp);
+        java.util.List<ClienteDet> out = new java.util.ArrayList<>();
+        String body = resp.substring("OK|".length());
+        if (body.isBlank()) return out;
+        for (String row : body.split(";", -1)) {
+            if (row.isBlank()) continue;
+            String[] t = row.replaceFirst("^CLI\\|", "").split("\\^", -1);
+            if (t.length >= 6) out.add(new ClienteDet(t[0], t[1], t[2], t[3], t[4], t[5]));
+        }
+        return out;
+    }
+    public boolean clienteActualizar(String cedula, String nombre, String apellidos,
+                                     String correo, String empresa) throws Exception {
+        String payload = String.join("|",
+                "CLIENTE_ACTUALIZAR",
+                sanitize(cedula), sanitize(nombre), sanitize(apellidos),
+                sanitize(correo), sanitize(empresa==null?"":empresa));
+        String resp = send(payload);
+        if (resp.startsWith("OK|ACTUALIZADO")) return true;
+        if (resp.startsWith("ERROR|VALIDACION|")) throw new IllegalArgumentException(resp);
+        throw new IllegalStateException(resp);
+    }
+    public boolean clienteEliminar(String cedula) throws Exception {
+        String resp = send("CLIENTE_ELIMINAR|" + sanitize(cedula));
+        if (resp.startsWith("OK|ELIMINADO")) return true;
+        if (resp.contains("FACTURAS")) throw new IllegalStateException("CLIENTE_TIENE_FACTURAS");
+        throw new IllegalStateException(resp);
+    }
+    private static String sanitize(String s){
+        return s==null? "" : s.replace("|"," ").replace("^"," ").replace(";"," ");
+    }
+   
+    
+        
+    
 }
