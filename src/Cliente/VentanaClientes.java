@@ -67,6 +67,13 @@ public class VentanaClientes extends javax.swing.JFrame {
             }
         }.execute();
     }
+    private String formatearCliente(Cliente.net.ClientApi.ClienteDet c){
+        return String.format(
+            "%s | %s %s | %s%s",
+            c.cedula, c.nombre, c.apellidos, c.correo,
+            c.esJuridica() ? " | " + (c.empresa == null ? "" : c.empresa) : ""
+        );
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -550,12 +557,155 @@ public class VentanaClientes extends javax.swing.JFrame {
 
     private void EliminacionTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminacionTotalActionPerformed
         // TODO add your handling code here:
-        
+        final String ced = CedulaBorrar.getText().trim();
+        if (!ced.matches("\\d{9,10}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cédula inválida (9-10 dígitos).");
+            return;
+        }
+
+        int opt = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "¿Eliminar cliente " + ced + "?\nEsta acción no se puede deshacer.",
+            "Confirmar eliminación",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+        if (opt != javax.swing.JOptionPane.YES_OPTION) return;
+
+        EliminacionTotal.setEnabled(false);
+
+        new javax.swing.SwingWorker<Boolean, Void>() {
+            String error = null;
+
+            @Override protected Boolean doInBackground() {
+                try {
+                    return new Cliente.net.ClientApi().clienteEliminar(ced);
+                } catch (IllegalStateException ise) {
+                    error = ise.getMessage();
+                    return false;
+                } catch (Exception ex) {
+                    error = ex.getMessage();
+                    return false;
+                }
+            }
+
+            @Override protected void done() {
+                EliminacionTotal.setEnabled(true);
+                try {
+                    boolean ok = get();
+                    if (ok) {
+                        javax.swing.JOptionPane.showMessageDialog(VentanaClientes.this, "Cliente eliminado.");
+                        CedulaBorrar.setText("");
+                        if (ced.equals(CodigoProductoGranular.getText().trim())) {
+                            nombre.setText("");
+                            apellidos.setText("");
+                            email.setText("");
+                            empresafield.setText("");
+                            setEmpresaVisible(false);
+                            setCamposEdicionEnabled(false);
+                        }
+                        cargarClientes();
+                    } else {
+                        String msg;
+                        if (error == null) {
+                            msg = "No se pudo eliminar.";
+                        } else if (error.contains("CLIENTE_TIENE_FACTURAS") || error.contains("FACTURAS")) {
+                            msg = "No se puede eliminar: el cliente tiene facturas.";
+                        } else if (error.contains("NO_ENCONTRADO")) {
+                            msg = "No existe un cliente con esa cédula.";
+                        } else {
+                            msg = "Error: " + error;
+                        }
+                        javax.swing.JOptionPane.showMessageDialog(VentanaClientes.this, msg);
+                    }
+                } catch (Exception e) {
+                    javax.swing.JOptionPane.showMessageDialog(VentanaClientes.this, "Error inesperado.");
+                }
+            }
+        }.execute();
     }//GEN-LAST:event_EliminacionTotalActionPerformed
 
     private void consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarActionPerformed
         // TODO add your handling code here:
-        
+        boolean porCedula = "Cedula".equals(String.valueOf(tipoConsulta.getSelectedItem()));
+        resultadoConsulta.setText("Buscando...\n");
+        consultar.setEnabled(false);
+
+        if (porCedula) {
+            final String ced = CedulaNombreConsulta.getText().trim();
+            if (!ced.matches("\\d{9,10}")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Cédula inválida (9-10 dígitos).");
+                resultadoConsulta.setText("");
+                consultar.setEnabled(true);
+                return;
+            }
+            new javax.swing.SwingWorker<Cliente.net.ClientApi.ClienteDet, Void>() {
+                String error = null;
+                @Override protected Cliente.net.ClientApi.ClienteDet doInBackground() {
+                    try {
+                        return new Cliente.net.ClientApi().clienteGet(ced);
+                    } catch (Exception ex) {
+                        error = ex.getMessage();
+                        return null;
+                    }
+                }
+                @Override protected void done() {
+                    consultar.setEnabled(true);
+                    try {
+                        var det = get();
+                        if (det == null) {
+                            resultadoConsulta.setText(error != null ? "Error: " + error : "Sin resultados.");
+                            return;
+                        }
+                        resultadoConsulta.setText(formatearCliente(det));
+                    } catch (Exception e) {
+                        resultadoConsulta.setText("Error inesperado.");
+                    }
+                }
+            }.execute();
+
+        } else {
+            final String nom = CedulaNombreConsulta.getText() == null ? "" : CedulaNombreConsulta.getText().trim();
+            final String ape = apellidosConsulta.getText() == null ? "" : apellidosConsulta.getText().trim();
+
+            if (nom.isBlank()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El nombre es obligatorio para esta búsqueda.");
+                resultadoConsulta.setText("");
+                consultar.setEnabled(true);
+                return;
+            }
+
+            new javax.swing.SwingWorker<java.util.List<Cliente.net.ClientApi.ClienteDet>, Void>() {
+                String error = null;
+                @Override protected java.util.List<Cliente.net.ClientApi.ClienteDet> doInBackground() {
+                    try {
+                        return new Cliente.net.ClientApi().clienteBuscarNombre(nom, ape);
+                    } catch (Exception ex) {
+                        error = ex.getMessage();
+                        return java.util.List.of();
+                    }
+                }
+                @Override protected void done() {
+                    consultar.setEnabled(true);
+                    try {
+                        var lista = get();
+                        if (error != null) {
+                            resultadoConsulta.setText("Error: " + error);
+                            return;
+                        }
+                        if (lista.isEmpty()) {
+                            resultadoConsulta.setText("Sin resultados.");
+                            return;
+                        }
+                        StringBuilder sb = new StringBuilder();
+                        for (var c : lista) sb.append(formatearCliente(c)).append('\n');
+                        resultadoConsulta.setText(sb.toString());
+                    } catch (Exception e) {
+                        resultadoConsulta.setText("Error inesperado.");
+                    }
+                }
+            }.execute();
+        }
     }//GEN-LAST:event_consultarActionPerformed
 
     private void btnMostrarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodoActionPerformed
