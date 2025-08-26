@@ -65,8 +65,8 @@ public class ServidorMain {
         
         private String procesar(String line) {
             try {
-                if (line.startsWith("CHECK_CEDULA|")) {
-                    String cedula = line.split("\\|", 2)[1];
+                if (line.startsWith("CHECK_CEDULA|")) { //CHECK_CEDULA|402660546
+                    String cedula = line.split("\\|", 2)[1]; //402660546
                     boolean exists = service.checkCedula(cedula);
                     return "EXISTS|" + exists;
                 }

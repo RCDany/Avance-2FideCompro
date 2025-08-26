@@ -6,7 +6,6 @@ package Servidor.dao;
 import Servidor.db.Db;
 import java.sql.*;
 
-import java.util.*;
 /**
  *
  * @author nanil

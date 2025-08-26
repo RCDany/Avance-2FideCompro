@@ -45,7 +45,7 @@ public class ClientApi {
     }
 
     public Resultado registrarUsuario(String ced, String nom, String ape, String mail, String pass) throws IOException {
-        String safe = String.join("|", "REGISTRAR_USUARIO", ced, nom, ape, mail, pass);
+        String safe = String.join("|", "REGISTRAR_USUARIO", ced, nom, ape, mail, pass); // REGISTRAR_USUARIO|ced|nom|ape|mail|pass
         String resp = send(safe);
         if (resp.startsWith("OK|")) return new Resultado(true, "Registrado");
         return new Resultado(false, resp);

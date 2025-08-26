@@ -98,7 +98,6 @@ public class VentanaClientes extends javax.swing.JFrame {
         guardarCambios = new javax.swing.JButton();
         apellidos = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        buscarCedulaEditar = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         email = new javax.swing.JTextField();
         labelEmpresa = new javax.swing.JLabel();
@@ -169,13 +168,6 @@ public class VentanaClientes extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel14.setText("Apellidos");
 
-        buscarCedulaEditar.setText("Buscar");
-        buscarCedulaEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscarCedulaEditarActionPerformed(evt);
-            }
-        });
-
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel15.setText("Email");
 
@@ -209,17 +201,16 @@ public class VentanaClientes extends javax.swing.JFrame {
                                 .addContainerGap())
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CodigoProductoGranular, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(buscarCedulaEditar)
-                                    .addComponent(jLabel15))
+                                    .addComponent(jLabel15)
+                                    .addComponent(CodigoProductoGranular, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(CedulaEditar)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel14)
@@ -241,11 +232,9 @@ public class VentanaClientes extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(CodigoProductoGranular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(CedulaEditar))
-                    .addComponent(buscarCedulaEditar))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CedulaEditar)
+                    .addComponent(CodigoProductoGranular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -717,10 +706,6 @@ public class VentanaClientes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_CodigoProductoGranularActionPerformed
 
-    private void buscarCedulaEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarCedulaEditarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buscarCedulaEditarActionPerformed
-
     private void CedulaEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CedulaEditarActionPerformed
         // TODO add your handling code here:
         String ced = CodigoProductoGranular.getText().trim();
@@ -806,7 +791,6 @@ public class VentanaClientes extends javax.swing.JFrame {
     private javax.swing.JTextField apellidos;
     private javax.swing.JTextField apellidosConsulta;
     private javax.swing.JButton btnMostrarTodo;
-    private javax.swing.JButton buscarCedulaEditar;
     private javax.swing.JButton consultar;
     private javax.swing.JTextField email;
     private javax.swing.JTextField empresafield;
